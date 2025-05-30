@@ -4,21 +4,23 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+// las migraciones nos permite tener un control de versiones de la estructura de datos
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * en el metodo up, se define que que hará la migracion. Por ejemplo
+     * la creación e información que tendrá una tabla nueva
      */
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            $table->id(); //por defecto se genera una columna autoincremental que funciona como clave primaria de la tabla
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->timestamps();
+            $table->timestamps(); // Genera dos columnas, una para guardar la fecha y hora en que se generó un registro y otra la modificación del mismo.
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -38,7 +40,8 @@ return new class extends Migration
     }
 
     /**
-     * Reverse the migrations.
+     * en el metodo down, especificamos que tiene que hacer para volver un paso atras
+     * ejemplo, eliminar la tabla que creamos en up
      */
     public function down(): void
     {

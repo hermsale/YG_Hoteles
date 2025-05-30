@@ -106,7 +106,7 @@
                                     <h2 class="text-xl font-semibold text-black dark:text-white">Laravel News</h2>
 
                                     <p class="mt-4 text-sm/relaxed">
-                                        Laravel News is a community driven portal and newsletter aggregating all of the latest and most important news in the Laravel ecosystem, including new package releases and tutorials.
+                                        Aca va un texto
                                     </p>
                                 </div>
 
@@ -134,7 +134,6 @@
                             </div>
                         </div>
                     </main>
-
                     <footer class="py-16 text-center text-sm text-black dark:text-white/70">
                         Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
                     </footer>
