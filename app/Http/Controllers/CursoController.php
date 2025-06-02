@@ -8,11 +8,17 @@ use Illuminate\Http\Request;
 class CursoController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * El metodo index es el metodo principal de este controlador
+     * En este metodo se muestra todos los recursos de este controlador.
+     * Osea si son cursos, se muestra todos los cursos disponibles
      */
     public function index()
     {
-        //
+        // de esta manera obtenemos en cursos lo que haya en la tabla Curso
+        $cursos = Curso::orderBy('precio') // nos permite hacer ordenamientos
+        ->select(['id','titulo','precio']) // nos permite traer en formato de array lo que necesitamos 
+        ->get(); // luego del ordenamiento se concatena con una flecha ->
+        return $cursos;
     }
 
     /**
