@@ -15,11 +15,17 @@ class CursoController extends Controller
     public function index()
     {
         // de esta manera obtenemos en cursos lo que haya en la tabla Curso
-        $cursos = Curso::orderBy('precio') // nos permite hacer ordenamientos
-        ->select(['id','titulo','precio']) // nos permite traer en formato de array lo que necesitamos
+        $cursos = Curso::select(['id','titulo','precio']) // nos permite traer en formato de array lo que necesitamos
+        ->orderBy('precio') // nos permite hacer ordenamientos
         ->get(); // luego del ordenamiento se concatena con una flecha ->
-        return view('cursos.index',compact('cursos')); // si index esta encarpetado,. tenemos que indicar el nombre de la carpeta y '.'
+        return view('cursos.index', [
+            'titulo' => 'Lista de cursos',
+            'cursos' => $cursos
+        ]);
     }
+
+        // compact('cursos')); // si index esta encarpetado,. tenemos que indicar el nombre de la carpeta y '.'
+                                                // si queremos enviar todo lo que llega a cursos, se puede hacer un compact y enviar todo
 
     /**
      * Show the form for creating a new resource.
