@@ -19,7 +19,7 @@ class CursoController extends Controller
         ->orderBy('precio') // nos permite hacer ordenamientos
         ->get(); // luego del ordenamiento se concatena con una flecha ->
         return view('cursos.index', [
-            'titulo' => 'Lista de cursos',
+            'titulo' => 'Lista de cursos', // key 
             'cursos' => $cursos
         ]);
     }

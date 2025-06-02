@@ -12,7 +12,9 @@ Route::get('/', function () {
 // definimos la ruta de acceso '/cursos' y por medio de un array accedemos al CursoController y le indicamos el metodo a ejecutar
 Route::get('/cursos', [
     CursoController::class,'index'
-])->name('cursos.index');
+])->name('cursos.index'); // le indicamos nombre, para poder identificarlo en la vista
+
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
