@@ -16,9 +16,9 @@ class CursoController extends Controller
     {
         // de esta manera obtenemos en cursos lo que haya en la tabla Curso
         $cursos = Curso::orderBy('precio') // nos permite hacer ordenamientos
-        ->select(['id','titulo','precio']) // nos permite traer en formato de array lo que necesitamos 
+        ->select(['id','titulo','precio']) // nos permite traer en formato de array lo que necesitamos
         ->get(); // luego del ordenamiento se concatena con una flecha ->
-        return $cursos;
+        return view('cursos.index',compact('cursos')); // si index esta encarpetado,. tenemos que indicar el nombre de la carpeta y '.'
     }
 
     /**
