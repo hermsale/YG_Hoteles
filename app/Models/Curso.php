@@ -14,7 +14,7 @@ class Curso extends Model
     // CONFIGURAMOS EL ELOQUENT
     // NOMBRE DE LA TABLA DE LA BASE DE DATOS
     protected $table = 'cursos';
-
+    public const DESCRIPCION = ['Es Online','Es Presencial'];
     // definimos qué propiedades son seteables (serían como los setter)
     // Estas propiedades son las que van a ser seteables cuando se creen.
     // Por ejemplo cuando se use en los Seeders

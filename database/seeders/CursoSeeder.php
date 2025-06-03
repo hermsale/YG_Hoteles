@@ -41,29 +41,31 @@ class CursoSeeder extends Seeder
         //     ],
         // ]);
 
+        // metodo usando ELOQUENT
         $cursos = [
             [
                 'titulo' => 'Curso de Programación',
-                'descripcion' => '...',
+                'descripcion' => Curso::DESCRIPCION[0], // cargamos inicialmente con 'Es Online'
                 'precio' => 250000.00,
                 'visible' => true,
             ],
             [
                 'titulo' => 'Curso de cocina',
-                'descripcion' => '...',
+                'descripcion' => Curso::DESCRIPCION[0],
                 'precio' => 150000.00,
                 'visible' => true,
             ],
             [
                 'titulo' => 'Cómo pelar una naranja',
-                'descripcion' => '...',
+                'descripcion' => Curso::DESCRIPCION[1],
                 'precio' => 50.00,
                 'visible' => true,
             ],
         ];
 
+        // este metodo eloquent es mas limpio 
         foreach ($cursos as $curso) {
-            Curso::create($curso);
+            Curso::create($curso); // creamos los cursos
         }
     }
 }
