@@ -63,7 +63,7 @@ class CursoSeeder extends Seeder
             ],
         ];
 
-        // este metodo eloquent es mas limpio 
+        // este metodo eloquent es mas limpio -
         foreach ($cursos as $curso) {
             Curso::create($curso); // creamos los cursos
         }

@@ -21,6 +21,7 @@ class CursoController extends Controller
 
         // toma el contenido de la constante DESCRIPCION definido en el modelo Curso.
         $opcionesDescripcion = Curso::DESCRIPCION;
+        
         // de esta manera obtenemos en cursos lo que haya en la tabla Curso
         $cursos = Curso::select(['id','titulo','precio','descripcion']) // nos permite traer en formato de array lo que necesitamos
         ->orderBy('precio') // nos permite hacer ordenamientos
