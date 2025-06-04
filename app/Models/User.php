@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var list<string>
      */
 
-     /**
+    /**
      * Valores por defecto para los atributos del modelo.
      */
     protected $attributes = [
@@ -26,7 +26,7 @@ class User extends Authenticatable
         'id_rol' => 2,
     ];
 
-    
+
     protected $fillable = [
         'name',
         'email',
@@ -43,6 +43,21 @@ class User extends Authenticatable
         return $this->belongsTo(Rol::class, 'id_rol');
     }
 
+
+
+    // funcion creada para verificar si un usuario es admin o si tiene permiso para determinada accion
+    public function tienePermiso($nombrePermiso)
+    {
+        if ($this->is_admin) {
+            return true;
+        }
+
+        return $this->rol->permisos->contains('nombre_permiso', $nombrePermiso);
+        // esta regla va a permitir hacer esto en el blade
+        //     @if(auth()->user()->is_admin || auth()->user()->tienePermiso('Crear Reserva'))
+        //     <a href="...">Crear reserva</a>
+            // @endif
+    }
 
     // si querés verificar si un usuario es administrador:
     public function isAdmin(): bool
