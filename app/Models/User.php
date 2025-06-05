@@ -22,7 +22,7 @@ class User extends Authenticatable
      * Valores por defecto para los atributos del modelo.
      */
     protected $attributes = [
-        // Si no enviás 'id_rol' al crear un User, automáticamente será 2
+        // Si no enviás 'id_rol' al crear un User, automáticamente será 3
         'id_rol' => 3,
     ];
 
@@ -40,13 +40,6 @@ class User extends Authenticatable
     public function rol()
     {
         return $this->belongsTo(Rol::class, 'id_rol');
-    }
-
-
-    // si querés verificar si un usuario es administrador:
-    public function isAdmin(): bool
-    {
-        return $this->is_admin;
     }
 
     // También podrías agregar algo para saber si tiene un rol específico:
@@ -74,7 +67,6 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'is_admin' => 'boolean', // se agrega el is_admin
         ];
     }
 }

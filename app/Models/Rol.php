@@ -9,7 +9,7 @@ class Rol extends Model
     // 👇 Recomendación:
 // Siempre que tengas un modelo cuyo plural Laravel pueda interpretar mal (como Rol, Pais, Categoria, etc.), declarale el nombre de la tabla explícitamente:
 // Este paso de aclaracion lo tenemos que hacer, porque creamos la tabla en plural y despues el modelo en singular
-    protected $table = 'roles'; 
+    protected $table = 'roles';
     // defino los fillable para usar eloquent y sea seteable
     protected $fillable = ['nombre_rol'];
 
@@ -24,6 +24,6 @@ class Rol extends Model
     // genero la relacion (muchos a muchos)
     public function permisos()
     {
-        return $this->belongsToMany(Permiso::class, 'permiso_rol', 'id_rol', 'id_permiso');
+        return $this->belongsToMany(Permiso::class, 'rol_permiso', 'id_rol', 'id_permiso');
     }
 }
