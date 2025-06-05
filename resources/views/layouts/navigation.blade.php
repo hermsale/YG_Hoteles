@@ -15,10 +15,7 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Inicio') }}
                     </x-nav-link>
-                    <!-- agrego cursos -->
-                     <x-nav-link :href="route('cursos.index')" :active="request()->routeIs('cursos.index')">
-                        {{ __('Cursos') }}
-                    </x-nav-link>
+                   
                 </div>
             </div>
 

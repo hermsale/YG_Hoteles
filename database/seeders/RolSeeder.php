@@ -15,10 +15,14 @@ class RolSeeder extends Seeder
         $roles = [
             [
                 'id' => 1,
-                'nombre_rol' => 'Recepcionista',
+                'nombre_rol'=> 'Administrador',
             ],
             [
                 'id' => 2,
+                'nombre_rol' => 'Recepcionista',
+            ],
+            [
+                'id' => 3,
                 'nombre_rol' => 'Cliente',
             ],
         ];

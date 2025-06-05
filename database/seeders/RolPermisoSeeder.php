@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Rol;
+use App\models\Permiso;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -22,11 +23,11 @@ class RolPermisoSeeder extends Seeder
 
         // Sync permite asociar sin duplicar
         $recepcionista->permisos()->sync(
-            \App\Models\Permiso::whereIn('nombre_permiso', $permisosAdmin)->pluck('id')->toArray()
+            Permiso::whereIn('nombre_permiso', $permisosAdmin)->pluck('id')->toArray()
         );
 
         $cliente->permisos()->sync(
-            \App\Models\Permiso::whereIn('nombre_permiso', $permisosCliente)->pluck('id')->toArray()
+            Permiso::whereIn('nombre_permiso', $permisosCliente)->pluck('id')->toArray()
         );
     }
 }

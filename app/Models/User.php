@@ -23,16 +23,15 @@ class User extends Authenticatable
      */
     protected $attributes = [
         // Si no enviás 'id_rol' al crear un User, automáticamente será 2
-        'id_rol' => 2,
+        'id_rol' => 3,
     ];
 
-    
+
     protected $fillable = [
         'name',
         'email',
         'password',
         // agrego las nuevas columnas
-        'is_admin',
         'id_rol'
     ];
 

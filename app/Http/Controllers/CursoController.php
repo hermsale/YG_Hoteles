@@ -19,18 +19,6 @@ class CursoController extends Controller
     public function index()
     {
 
-        // toma el contenido de la constante DESCRIPCION definido en el modelo Curso.
-        $opcionesDescripcion = Curso::DESCRIPCION;
-        
-        // de esta manera obtenemos en cursos lo que haya en la tabla Curso
-        $cursos = Curso::select(['id','titulo','precio','descripcion']) // nos permite traer en formato de array lo que necesitamos
-        ->orderBy('precio') // nos permite hacer ordenamientos
-        ->get(); // luego del ordenamiento se concatena con una flecha ->
-        return view('cursos.index', [
-            'titulo' => 'Lista de cursos', // key
-            'cursos' => $cursos,
-            'opcionesDescripcion' => $opcionesDescripcion, // para luego pasarlo a la vista (seria un array)
-        ]);
     }
 
         // compact('cursos')); // si index esta encarpetado,. tenemos que indicar el nombre de la carpeta y '.'
