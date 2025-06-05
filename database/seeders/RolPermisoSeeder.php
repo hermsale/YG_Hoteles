@@ -14,7 +14,7 @@ class RolPermisoSeeder extends Seeder
      */
     public function run(): void
     {
-         $recepcionista = Rol::where('nombre_rol', 'Recepcionista')->first();
+        $recepcionista = Rol::where('nombre_rol', 'Recepcionista')->first();
         $cliente = Rol::where('nombre_rol', 'Cliente')->first();
 
         // IDs o nombres de los permisos

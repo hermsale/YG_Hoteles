@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Permiso;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class PermisoSeeder extends Seeder
@@ -13,18 +12,41 @@ class PermisoSeeder extends Seeder
      */
     public function run(): void
     {
-         $permisos = [
-            ['nombre_permiso' => 'crear cursos'],
-            ['nombre_permiso' => 'leer cursos'],
-            ['nombre_permiso' => 'modificar cursos'],
-            ['nombre_permiso' => 'eliminar cursos'],
+        $permisos = [
+            // reservas
+            ['nombre_permiso' => 'crear reserva'],
+            ['nombre_permiso' => 'editar reserva'],
+            ['nombre_permiso' => 'cancelar reserva'],
+            ['nombre_permiso' => 'ver reserva'],
+            // habitaciones
+            ['nombre_permiso' => 'crear habitacion'],
+            ['nombre_permiso' => 'editar habitacion'],
+            ['nombre_permiso' => 'eliminar habitacion'],
+            ['nombre_permiso' => 'ver habitacion'],
+            /// usuarios
+            ['nombre_permiso' => 'ver usuario'],
+            ['nombre_permiso' => 'crear usuario'],
+            ['nombre_permiso' => 'editar usuario'],
+            ['nombre_permiso' => 'eliminar usuario'],
+            ['nombre_permiso' => 'restablecer contraseña usuario'],
+            ['nombre_permiso' => 'asignar rol a usuario'],
+
+            // caja
+            ['nombre_permiso' => 'abrir caja'],
+            ['nombre_permiso' => 'cerrar caja'],
+            ['nombre_permiso' => 'ver caja'],
+            ['nombre_permiso' => 'realizar arqueo de caja'],
+            ['nombre_permiso' => 'ver historial de caja'],
+
+            // reportes
+            ['nombre_permiso' => 'ver reportes'],
         ];
 
         foreach ($permisos as $permiso) {
-            Permiso::updateOrCreate(['nombre_permiso' => $permiso['nombre_permiso']], $permiso);
+            Permiso::updateOrCreate(
+                ['nombre_permiso' => $permiso['nombre_permiso']],
+                $permiso
+            );
         }
-        // Con esto:
-        // Si ya existe un permiso con ese id, lo actualiza.
-        // Si no existe, lo crea.
     }
 }
