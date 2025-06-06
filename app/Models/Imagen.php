@@ -11,5 +11,11 @@ class Imagen extends Model
     use HasFactory;
     protected $table = 'imagenes';
 
-    protected $fillable = ['url'];
+    protected $fillable = ['url', 'id_habitacion'];
+
+    // muchas imagenes pertenecen a 1 habitacion
+    public function habitacion()
+    {
+        return $this->belongsTo(Habitacion::class);
+    }
 }
