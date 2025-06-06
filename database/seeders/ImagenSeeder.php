@@ -11,10 +11,10 @@ class ImagenSeeder extends Seeder
     public function run()
     {
          $imagenes = [
-            ['url' => './img/habitacion-deluxe101-1.jpg'],
-            ['url' => './img/habitacion-simple201-1.jpg'],
-            ['url' => 'img/habitacion-doble301-1.jpg'],
-            ['url' => 'img/habitacion-triple401-1.jpg'],
+            ['url' => 'img/habitacion-deluxe101-1.png'],
+            ['url' => 'img/habitacion-simple201-1.png'],
+            ['url' => 'img/habitacion-doble301-1.png'],
+            ['url' => 'img/habitacion-triple401-1.png'],
         ];
 
         foreach ($imagenes as $imagen) {
