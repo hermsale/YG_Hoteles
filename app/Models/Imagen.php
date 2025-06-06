@@ -9,4 +9,7 @@ class Imagen extends Model
 {
     /** @use HasFactory<\Database\Factories\ImagenFactory> */
     use HasFactory;
+    protected $table = 'imagenes';
+
+    protected $fillable = ['url'];
 }

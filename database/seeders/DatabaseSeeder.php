@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
         // ]);
     // Llamamos al seeder de cursos
         $this->call([
+            ImagenSeeder::class,
             RolSeeder::class,
             PermisoSeeder::class,
             RolPermisoSeeder::class,
