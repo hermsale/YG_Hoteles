@@ -9,6 +9,13 @@ class Imagen extends Model
 {
     /** @use HasFactory<\Database\Factories\ImagenFactory> */
     use HasFactory;
+    protected $table = 'imagenes';
 
-     protected $table = 'imagenes'; // <--- Aquí definís el nombre exacto de la tabla
+    protected $fillable = ['url', 'id_habitacion'];
+
+    // muchas imagenes pertenecen a 1 habitacion
+    public function habitacion()
+    {
+        return $this->belongsTo(Habitacion::class);
+    }
 }

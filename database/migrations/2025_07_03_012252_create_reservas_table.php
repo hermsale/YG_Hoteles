@@ -13,8 +13,8 @@ class CreateReservasTable extends Migration
             $table->date('fecha_ingreso');
             $table->date('fecha_egreso');
             $table->decimal('precio_final', 10, 2);
-            $table->string('estado_pago')->default('Pendiente');
-            $table->string('estado_reserva');
+            $table->string('estado_pago')->default('Pendiente'); // al crearse una reserva su estado de pago es Pendiente
+            $table->string('estado_reserva')->default('Activa'); // al crearse una reserva su estado es Activa
             $table->timestamp('fecha_creacion')->useCurrent();
 
             $table->foreignId('id_habitacion')->constrained('habitaciones')->onDelete('cascade');

@@ -27,6 +27,7 @@ class User extends Authenticatable
     ];
 
 
+    // columnas de user
     protected $fillable = [
         'name',
         'email',
@@ -36,13 +37,14 @@ class User extends Authenticatable
     ];
 
 
-    // va a tener un id_rol
+    // un usuario puede tener solo 1 rol
     public function rol()
     {
         return $this->belongsTo(Rol::class, 'id_rol');
     }
 
-    // También podrías agregar algo para saber si tiene un rol específico:
+    // funciones utiles
+    // para saber cual es su rol específico:
     public function hasRole(string $nombreRol): bool
     {
         return $this->rol?->nombre_rol === $nombreRol;
