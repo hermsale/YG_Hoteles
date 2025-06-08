@@ -19,9 +19,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <h1 class="text-2xl font-bold mb-4">Imagenes Habitaciones</h1>
-                    <div class="mt-4 flex space-x-4">
-                        @include('imagenes.listado', ['imagenes' => $imagenes])
-                    </div>
+                    
                 </div>
             </div>
         </div>
