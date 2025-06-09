@@ -28,9 +28,16 @@
                     </x-slot>
 
                     <x-slot name="content">
+                        <!-- valido que sea admin o recepcionista -->
+                        @if (in_array(auth()->user()->rol->nombre_rol, ['Administrador','Recepcionista']))
+                            <x-dropdown-link :href="route('dashboard')">
+                                {{ __('Dashboard') }}
+                            </x-dropdown-link>
+                        @endif
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Perfil') }}
                         </x-dropdown-link>
+
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
