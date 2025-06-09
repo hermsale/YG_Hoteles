@@ -20,7 +20,7 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
-     * Handle an incoming authentication request.
+     * este metodo controla el login y su redirect
      */
     public function store(LoginRequest $request): RedirectResponse
     {
@@ -28,7 +28,22 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        // capturo el usuario logiado
+        $user = Auth::user();
+
+        // Redirección personalizada - si es administrador
+        if ($user->rol->nombre_rol === 'Administrador') {
+            return redirect()->intended('/dashboard');
+        }
+
+        // Redirección personalizada - si es cliente
+        if ($user->rol->nombre_rol === 'Cliente') {
+            return redirect()->intended('/');
+        }
+
+        // Redirección por defecto
+        return redirect()->intended('/');
+        // return redirect()->intended(route('dashboard', absolute: false));
     }
 
     /**

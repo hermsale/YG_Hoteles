@@ -44,7 +44,7 @@
                 {{ __('¿Ya está registrado?') }}
             </a>
 
-            <x-secondary-button class="ms-4">
+            <x-secondary-button class="ms-4" type="submit">
                 {{ __('Registrar') }}
             </x-secondary-button>
         </div>
