@@ -1,67 +1,44 @@
 <!DOCTYPE html>
 <html lang="es">
 
-<head>
-    <meta charset="UTF-8">
-    <title>YG Hoteles – Confort y naturaleza en Las Leñas</title>
-    @vite('resources/css/app.css')
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <title>YG Hoteles – Confort y naturaleza en Las Leñas</title>
+        @vite('resources/css/app.css')
+    </head>
 
-<body class="bg-black text-white font-sans">
+    <body class="bg-black text-white font-sans">
 
-    {{-- Navbar --}}
-    <header class="bg-gray-900 bg-opacity-80 fixed w-full z-50">
-        <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
-            <div class="flex items-center gap-3 text-white text-xl font-bold">
-                <a href="/">
-                    <img src="{{ asset('img/otros/icon-hotel.png') }}" alt="Logo del hotel"
-                        class="w-10 h-10 object-contain">
-                </a>
-                <span>YG Hoteles</span>
+        <x-app-layout>
+            {{-- Imagen principal con reserva --}}
+            <section class="relative h-screen bg-cover bg-center"
+            style="background-image: url('{{ asset('img/otros/fondo-inicio.png') }}');">
+            <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+            <div class="relative z-10 flex justify-center items-center h-full">
+                <div class="bg-white text-black p-6 rounded shadow-lg w-80">
+                    <h2 class="text-lg font-semibold mb-4">Reserva Online</h2>
+                    <form>
+                        <label class="block text-sm">Fecha de entrada</label>
+                        <input type="date" class="w-full border rounded p-1 mb-3" value="2025-04-03">
+
+                        <label class="block text-sm">Fecha de salida</label>
+                        <input type="date" class="w-full border rounded p-1 mb-3" value="2025-04-04">
+
+                        <label class="block text-sm">Huéspedes</label>
+                        <select class="w-full border rounded p-1">
+                            <option>2 Adultos</option>
+                            <option>3 Adultos</option>
+                            <option>4 Adultos</option>
+                        </select>
+
+                        <button type="submit" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded">
+                            Buscar
+                        </button>
+                    </form>
+                </div>
             </div>
-
-            <div class="flex items-center gap-4">
-                <input type="text" placeholder="Buscar" class="px-3 py-1 rounded text-black">
-                <a href="#" class="text-white hover:underline">Mis reservas</a>
-                <a href="#" class="text-white hover:underline">Contáctanos</a>
-
-                <a href="{{ route('login') }}"
-                    class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white">
-                    Iniciar Sesión
-                </a>
-
-            </div>
-        </div>
-    </header>
-
-    {{-- Imagen principal con reserva --}}
-    <section class="relative h-screen bg-cover bg-center"
-        style="background-image: url('{{ asset('img/otros/fondo-inicio.png') }}');">
-        <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-        <div class="relative z-10 flex justify-center items-center h-full">
-            <div class="bg-white text-black p-6 rounded shadow-lg w-80">
-                <h2 class="text-lg font-semibold mb-4">Reserva Online</h2>
-                <form>
-                    <label class="block text-sm">Fecha de entrada</label>
-                    <input type="date" class="w-full border rounded p-1 mb-3" value="2025-04-03">
-
-                    <label class="block text-sm">Fecha de salida</label>
-                    <input type="date" class="w-full border rounded p-1 mb-3" value="2025-04-04">
-
-                    <label class="block text-sm">Huéspedes</label>
-                    <select class="w-full border rounded p-1">
-                        <option>2 Adultos</option>
-                        <option>3 Adultos</option>
-                        <option>4 Adultos</option>
-                    </select>
-
-                    <button type="submit" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded">
-                        Buscar
-                    </button>
-                </form>
-            </div>
-        </div>
-    </section>
+        </section>
+    </x-app-layout>
 
     {{-- Tabs --}}
     <nav class="bg-gray-800 text-center py-3">
@@ -105,6 +82,6 @@
         </div>
     </section>
 
-</body>
 
+</body>
 </html>

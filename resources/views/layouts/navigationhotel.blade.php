@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
         <!-- Logo + Marca -->
         <div class="flex items-center gap-3 text-white text-xl font-bold">
-            <a href="/">
+            <a href="{{ route('/') }}">
                 <img src="{{ asset('img/otros/icon-hotel.png') }}" alt="Logo del hotel"
                     class="w-10 h-10 object-contain">
             </a>
@@ -33,13 +33,13 @@
                         </x-dropdown-link>
 
                         <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
+                        <method="POST" action="{{ route('logout') }}">
                             @csrf
 
-                            <x-dropdown-link href="route('logout')"
+                            <x-dropdown-link action="{{ route('logout') }}"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                {{ __('Cerrar Sesión') }}
+                                {{ __('logout') }}
                             </x-dropdown-link>
 
                         </form>
