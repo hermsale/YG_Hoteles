@@ -9,6 +9,7 @@
 
     <body class="bg-black text-white font-sans">
 
+    <!-- app-layout es el navbar  -->
         <x-app-layout>
             {{-- Imagen principal con reserva --}}
             <section class="relative h-screen bg-cover bg-center"

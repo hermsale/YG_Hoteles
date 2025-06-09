@@ -22,7 +22,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard'); // le agrego un name a la ruta
 
-Route::get('/dashboard', [DashboardController::class, 'listaImgHabitacion'])->middleware(['auth', 'verified','rol.recepcionista'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'listaImgHabitacion'])->middleware(['auth', 'verified','rol.AdminRecepcionista'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
