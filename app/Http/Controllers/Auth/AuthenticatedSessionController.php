@@ -36,6 +36,10 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended('/dashboard');
         }
 
+         if ($user->rol->nombre_rol === 'Recepcionista') {
+            return redirect()->intended('/dashboard');
+        }
+
         // Redirección personalizada - si es cliente
         if ($user->rol->nombre_rol === 'Cliente') {
             return redirect()->intended('/');

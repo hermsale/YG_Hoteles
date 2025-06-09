@@ -11,7 +11,7 @@ class RolAdministrador
 {
     public function handle(Request $request, Closure $next)
     {
-        // $permitidos = ['Administrador', 'Recepcionista'];
+        // se gestiona los permisos exclusivos del administrador
         if (Auth::check() && Auth::user()->rol->nombre_rol === 'Administrador') {
             return $next($request);
         }

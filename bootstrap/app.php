@@ -13,7 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'rol.admin' => \App\Http\Middleware\RolAdministrador::class,
-            'rol.recepcionista' => \App\Http\Middleware\RolRecepcionista::class,
+            'rol.recepcionista' => \App\Http\Middleware\RolAdminRecepcionistaMiddleware::class,
             'rol.cliente' => \App\Http\Middleware\RolCliente::class,
         ]);
 

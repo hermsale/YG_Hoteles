@@ -11,7 +11,7 @@ class RolCliente
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * Se gestiona los permisos del cliente
      */
     // Dentro de RolAdministrador.php
     public function handle($request, Closure $next)
