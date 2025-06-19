@@ -1,20 +1,38 @@
 <?php
 
+<<<<<<< HEAD
+=======
+use App\Http\Controllers\DashboardController;
+>>>>>>> 7b833e4463abee1076ce4bd1b1d45ba717972223
 use App\Http\Controllers\ProfileController;
+
 use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
     return view('welcome');
 });
+<<<<<<< HEAD
 // Route::view('/', 'cliente.home');
 // Route::get('/', function () {
 //     return view('cliente.home');
 // });
+=======
+
+// // definimos la ruta de acceso '/cursos' y por medio de un array accedemos al CursoController y le indicamos el metodo a ejecutar
+
+
+//  el metodo 'updateDescripcion'  es la comunicacion controlador. y el name es lo que hace la conexion con la vista, donde hay un form y un route
+// Route::put('/cursos/{curso}', [CursoController::class, 'updateDescripcion'])->name('cursos.updateDescripcion');
+
+
+>>>>>>> 7b833e4463abee1076ce4bd1b1d45ba717972223
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard'); // le agrego un name a la ruta
+
+Route::get('/dashboard', [DashboardController::class, 'listaImgHabitacion'])->middleware(['auth', 'verified','rol.recepcionista'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

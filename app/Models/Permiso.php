@@ -12,6 +12,6 @@ class Permiso extends Model
 //  Permiso necesita la relación inversa hacia Rol, ya que es muchos a muchos.
     public function roles()
     {
-        return $this->belongsToMany(Rol::class, 'permiso_rol', 'id_permiso', 'id_rol');
+        return $this->belongsToMany(Rol::class, 'rol_permiso', 'id_permiso', 'id_rol');
     }
 }

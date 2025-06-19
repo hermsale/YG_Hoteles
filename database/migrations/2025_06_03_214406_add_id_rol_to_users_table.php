@@ -6,14 +6,13 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     /**
-     * ✅ ALTER 
+     * ✅ ALTER
      * La migración add_is_admin_and_id_rol_to_users que creaste es una migración de tipo ALTER, es decir, modifica la tabla users ya existente, y no la crea desde cero.
      */
     public function up(): void
     {
         // esta tabla agrega a users : is_admin y id_rol
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('is_admin')->default(false);
             $table->unsignedBigInteger('id_rol')->nullable();
             $table->foreign('id_rol')->references('id')->on('roles');
         });
@@ -30,7 +29,6 @@ return new class extends Migration {
         Schema::table('users', function (Blueprint $table) {
             $table->dropForeign(['id_rol']); // Elimina la FK primero
             $table->dropColumn('id_rol');
-            $table->dropColumn('is_admin');
         });
     }
 };

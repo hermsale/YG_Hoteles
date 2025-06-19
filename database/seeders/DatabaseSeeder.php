@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Amenity;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -21,10 +22,17 @@ class DatabaseSeeder extends Seeder
         // ]);
     // Llamamos al seeder de cursos
         $this->call([
+            CategoriaSeeder::class,
             RolSeeder::class,
             PermisoSeeder::class,
             RolPermisoSeeder::class,
+            AmenitySeeder::class,
+            HabitacionSeeder::class,
+            HabitacionAmenitySeeder::class,
+            ImagenSeeder::class,
             UserSeeder::class,
+            PromocionSeeder::class,
+            ReservaSeeder::class,
         ]
         );
     }

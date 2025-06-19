@@ -14,14 +14,17 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-         User::updateOrCreate(
-            ['email' => 'hermsale@gmail.com'],
+
+        $usuarios = [
             [
+                'email' => 'hermsale@gmail.com',
+
                 'name' => 'Admin Principal',
                 'password' => Hash::make('alejandro2025'),
-                'is_admin' => true,
                 'id_rol' => 1,
+
             ]
+<<<<<<< HEAD
         );
 
          // Romina Recepcionista
@@ -46,4 +49,43 @@ class UserSeeder extends Seeder
             ]
         );
     }
+=======
+            ,
+            [
+                'email' => 'yg-hotel_Romina@gmail.com',
+                'name' => 'Romina Recepcionista',
+                'password' => Hash::make('romina2025'),
+                'id_rol' => 2,
+            ]
+            ,
+            [
+                'email' => 'agustin@gmail.com',
+                'name' => 'Agustin',
+                'password' => Hash::make('agustin2025'),
+                'id_rol' => 3,
+            ],
+        ];
+
+        // Para evitar duplicados en futuros seeds, podés hacer lo siguiente:
+        foreach ($usuarios as $user) {
+            User::updateOrCreate(
+                ['email' => $user['email']], // Criterio de búsqueda
+                $user                         // Datos a insertar o actualizar
+            );
+        }
+        // ¿Qué hace esto?
+            // - Si ya existe un usuario con ese email, lo actualiza con los nuevos datos.
+            // - Si no existe, lo crea.
+            // De esta forma evitás duplicados y mantenés los datos consistentes.
+}
+
+
+
+
+
+
+
+
+
+>>>>>>> 7b833e4463abee1076ce4bd1b1d45ba717972223
 }

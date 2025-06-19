@@ -16,12 +16,17 @@ return new class extends Migration {
 
         //
         // creo la tabla pivote o intermedia que une rol con permiso muchos a muchos EN LA BASE DE DATOS
-        Schema::create('permiso_rol', function (Blueprint $table) {
-            $table->unsignedBigInteger('id_rol');
-            $table->unsignedBigInteger('id_permiso');
-            $table->foreign('id_rol')->references('id')->on('roles')->onDelete('cascade');
-            $table->foreign('id_permiso')->references('id')->on('permisos')->onDelete('cascade');
-            $table->primary(['id_rol', 'id_permiso']);
+        // Schema::create('rol_permiso', function (Blueprint $table) {
+            // $table->unsignedBigInteger('id_rol');
+            // $table->unsignedBigInteger('id_permiso');
+            // $table->foreign('id_rol')->references('id')->on('roles')->onDelete('cascade');
+            // $table->foreign('id_permiso')->references('id')->on('permisos')->onDelete('cascade');
+            // $table->primary(['id_rol', 'id_permiso']);
+            Schema::create('rol_permiso', function (Blueprint $table) {
+                $table->foreignId('id_rol')->constrained('roles')->onDelete('cascade');
+                $table->foreignId('id_permiso')->constrained('permisos')->onDelete('cascade');
+                $table->primary(['id_rol', 'id_permiso']);
+            // });
         });
     }
 
@@ -30,6 +35,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('permiso_rol');
+        Schema::dropIfExists('rol_permiso');
     }
 };
