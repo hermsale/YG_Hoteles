@@ -1,9 +1,6 @@
 <?php
 
-<<<<<<< HEAD
-=======
 use App\Http\Controllers\DashboardController;
->>>>>>> 7b833e4463abee1076ce4bd1b1d45ba717972223
 use App\Http\Controllers\ProfileController;
 
 use Illuminate\Support\Facades\Route;
@@ -12,12 +9,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-<<<<<<< HEAD
-// Route::view('/', 'cliente.home');
-// Route::get('/', function () {
-//     return view('cliente.home');
-// });
-=======
 
 // // definimos la ruta de acceso '/cursos' y por medio de un array accedemos al CursoController y le indicamos el metodo a ejecutar
 
@@ -26,7 +17,6 @@ Route::get('/', function () {
 // Route::put('/cursos/{curso}', [CursoController::class, 'updateDescripcion'])->name('cursos.updateDescripcion');
 
 
->>>>>>> 7b833e4463abee1076ce4bd1b1d45ba717972223
 
 Route::get('/dashboard', function () {
     return view('dashboard');

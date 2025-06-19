@@ -24,32 +24,6 @@ class UserSeeder extends Seeder
                 'id_rol' => 1,
 
             ]
-<<<<<<< HEAD
-        );
-
-         // Romina Recepcionista
-        User::updateOrCreate(
-            ['email' => 'romina@yg-hoteles.com'],
-            [
-                'name' => 'Romina Recepcionista',
-                'password' => Hash::make('romina2025'),
-                'is_admin' => false,
-                'id_rol' => 1, // Recepcionista
-            ]
-        );
-
-        // Agustín Cliente
-        User::updateOrCreate(
-            ['email' => 'agustin@gmail.com'],
-            [
-                'name' => 'Agustin',
-                'password' => Hash::make('agustin2025'),
-                'is_admin' => false,
-                'id_rol' => 2, // Cliente
-            ]
-        );
-    }
-=======
             ,
             [
                 'email' => 'yg-hotel_Romina@gmail.com',
@@ -87,5 +61,4 @@ class UserSeeder extends Seeder
 
 
 
->>>>>>> 7b833e4463abee1076ce4bd1b1d45ba717972223
 }

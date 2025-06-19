@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Permiso;
 use App\Models\Rol;
 use App\models\Permiso;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -15,21 +14,6 @@ class RolPermisoSeeder extends Seeder
      */
     public function run(): void
     {
-<<<<<<< HEAD
-        $recepcionista = Rol::where('nombre_rol', 'Recepcionista')->first();
-        $cliente = Rol::where('nombre_rol', 'Cliente')->first();
-
-        // IDs o nombres de los permisos
-        // Permisos del Cliente
-        $permisosCliente = [
-            'Crear Reserva',
-            'Cancelar Reserva',
-            'Ver Reserva',
-        ];
-
-        // Permisos del Recepcionista: todos menos 'Eliminar Usuario' y 'Eliminar Habitacion'
-        $todosLosPermisos = Permiso::pluck('nombre_permiso', 'id');
-=======
 
         $admin = Rol::where('nombre_rol', 'Administrador')->first();
         $recepcionista = Rol::where('nombre_rol', 'Recepcionista')->first();
@@ -67,10 +51,9 @@ class RolPermisoSeeder extends Seeder
         $recepcionista->permisos()->sync(
             Permiso::whereIn('nombre_permiso', $permisosRecepcionista)->pluck('id')->toArray()
         );
->>>>>>> 7b833e4463abee1076ce4bd1b1d45ba717972223
 
         // cargamos todos los permisos excepto el filtro. Lo obtenemos directamente de la lista de Permiso
-        $permisosRecepcionista = $todosLosPermisos->filter(function ($nombre) {
+        $permisosRecepcionista = collect($permisosAdmin)->filter(function ($nombre) {
             return !in_array($nombre, ['Eliminar Usuario', 'Eliminar Habitacion']);
         });
 

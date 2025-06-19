@@ -13,20 +13,6 @@ class PermisoSeeder extends Seeder
     public function run(): void
     {
         $permisos = [
-<<<<<<< HEAD
-            ['nombre_permiso' => 'Crear Reserva'],
-            ['nombre_permiso' => 'Cancelar Reserva'],
-            ['nombre_permiso' => 'Editar Reserva'],
-            ['nombre_permiso' => 'Ver Reserva'],
-            ['nombre_permiso' => 'Crear Habitacion'],
-            ['nombre_permiso' => 'Editar Habitacion'],
-            ['nombre_permiso' => 'Eliminar Habitacion'],
-            ['nombre_permiso' => 'Ver Habitacion'],
-            ['nombre_permiso' => 'Crear Usuario'], // exclusiva is_admin. para crear recepcionistas
-            ['nombre_permiso' => 'Editar Usuario'],
-            ['nombre_permiso' => 'Eliminar Usuario'], // es para el is_admin
-            ['nombre_permiso' => 'Ver Usuario'],
-=======
             // reservas
             ['nombre_permiso' => 'crear reserva'],
             ['nombre_permiso' => 'editar reserva'],
@@ -54,7 +40,6 @@ class PermisoSeeder extends Seeder
 
             // reportes
             ['nombre_permiso' => 'ver reportes'],
->>>>>>> 7b833e4463abee1076ce4bd1b1d45ba717972223
         ];
 
         foreach ($permisos as $permiso) {
