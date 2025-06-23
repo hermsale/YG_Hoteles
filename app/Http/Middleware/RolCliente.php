@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class RolCliente
@@ -16,7 +17,7 @@ class RolCliente
     // Dentro de RolAdministrador.php
     public function handle($request, Closure $next)
     {
-        if (auth()->check() && auth()->user()->rol->nombre_rol === 'Cliente') {
+        if (Auth::check() && Auth::user()->rol->nombre_rol === 'Cliente') {
             return $next($request);
         }
 

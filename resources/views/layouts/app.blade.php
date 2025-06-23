@@ -8,25 +8,13 @@
 
     <title>{{ config('app.name', 'YG-Hotel') }}</title>
 
-    <!-- Fonts -->
-    <!-- <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" /> -->
+        <!-- Scripts -->
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    </head>
 
-    <!-- Tipografía moderna agregado por ale -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,600,800&display=swap" rel="stylesheet" />
-
-    <!-- Estilos agregado por ale -->
-    <!-- @vite(['resources/css/app.css', 'resources/js/app.js']) -->
-
-    <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-
-<body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100">
-        <!-- esto corresponde a la barra de navegacion -->
-        <header class="bg-orange-300 shadow-md sticky top-0 z-50">
+    <body class="font-sans antialiased">
+        <div class="min-h-screen bg-gray-100">
+            <!-- esto corresponde a la barra de navegacion -->
             @include('layouts.navigation')
         </header>
 

@@ -9,7 +9,18 @@
 
     <body class="bg-black text-white font-sans">
 
-         <x-app-layout>
+    <!-- app-layout es el navbar  -->
+        <x-app-layout>
+            {{-- Imagen principal con reserva --}}
+            <section class="relative h-screen bg-cover bg-center"
+            style="background-image: url('{{ asset('img/otros/fondo-inicio.png') }}');">
+            <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+            <div class="relative z-10 flex justify-center items-center h-full">
+                <div class="bg-white text-black p-6 rounded shadow-lg w-80">
+                    <h2 class="text-lg font-semibold mb-4">Reserva Online</h2>
+                    <form>
+                        <label class="block text-sm">Fecha de entrada</label>
+                        <input type="date" class="w-full border rounded p-1 mb-3" value="2025-04-03">
 
              {{-- Imagen principal con reserva --}}
              <section class="relative h-screen bg-cover bg-center"
@@ -40,6 +51,7 @@
                 </div>
             </section>
 
+<<<<<<< HEAD
             {{-- Tabs --}}
             <nav class="bg-gray-800 text-center py-3">
                 <div class="inline-flex rounded overflow-hidden shadow-lg">
@@ -49,6 +61,17 @@
                     <a href="#" class="bg-gray-700 hover:bg-gray-600 px-4 py-2">Reseñas</a>
                 </div>
             </nav>
+=======
+    {{-- Tabs --}}
+    <nav class="bg-gray-800 text-center py-3">
+        <div class="inline-flex rounded overflow-hidden shadow-lg">
+            <a href="/" class="bg-blue-500 px-4 py-2">Descripción</a>
+            <a href="{{ route('habitaciones.index') }}"class="bg-gray-700 hover:bg-gray-600 px-4 py-2">Habitaciones</a>
+            <a href="#" class="bg-gray-700 hover:bg-gray-600 px-4 py-2">Fotos</a>
+            <a href="#" class="bg-gray-700 hover:bg-gray-600 px-4 py-2">Reseñas</a>
+        </div>
+    </nav>
+>>>>>>> 9141836c6fb9322a4f6df5262b239efb02bcba13
 
             {{-- Descripción --}}
             <section class="px-8 py-12 max-w-6xl mx-auto">
