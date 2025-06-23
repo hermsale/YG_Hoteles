@@ -13,7 +13,7 @@
         <x-app-layout>
             {{-- Imagen principal con reserva --}}
             <section class="relative h-screen bg-cover bg-center"
-            style="background-image: url('{{ asset('./img/otros/fondo-inicio.png') }}');">
+            style="background-image: url('{{ asset('img/otros/fondo-inicio.png') }}');">
             <div class="absolute inset-0 bg-black bg-opacity-40"></div>
             <div class="relative z-10 flex justify-center items-center h-full">
                 <div class="bg-white text-black p-6 rounded shadow-lg w-80">
@@ -44,8 +44,8 @@
     {{-- Tabs --}}
     <nav class="bg-gray-800 text-center py-3">
         <div class="inline-flex rounded overflow-hidden shadow-lg">
-            <a href="#" class="bg-blue-500 px-4 py-2">Descripción</a>
-            <a href="#" class="bg-gray-700 hover:bg-gray-600 px-4 py-2">Habitaciones</a>
+            <a href="/" class="bg-blue-500 px-4 py-2">Descripción</a>
+            <a href="{{ route('habitaciones.index') }}"class="bg-gray-700 hover:bg-gray-600 px-4 py-2">Habitaciones</a>
             <a href="#" class="bg-gray-700 hover:bg-gray-600 px-4 py-2">Fotos</a>
             <a href="#" class="bg-gray-700 hover:bg-gray-600 px-4 py-2">Reseñas</a>
         </div>
