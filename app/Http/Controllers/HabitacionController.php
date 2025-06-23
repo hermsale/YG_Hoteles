@@ -13,6 +13,7 @@ class HabitacionController extends Controller
      */
     public function index()
     {
+        return view('cliente.habitaciones.habitaciones'); // Retorna la vista dashboard.blade.php
         //
     }
 
