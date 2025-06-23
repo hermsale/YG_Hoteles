@@ -13,7 +13,7 @@
         <x-app-layout>
             {{-- Imagen principal con reserva --}}
             <section class="relative h-screen bg-cover bg-center"
-            style="background-image: url('{{ asset('img/otros/fondo-inicio.png') }}');">
+            style="background-image: url('{{ asset('./img/otros/fondo-inicio.png') }}');">
             <div class="absolute inset-0 bg-black bg-opacity-40"></div>
             <div class="relative z-10 flex justify-center items-center h-full">
                 <div class="bg-white text-black p-6 rounded shadow-lg w-80">

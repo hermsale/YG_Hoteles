@@ -4,7 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 
 use Illuminate\Support\Facades\Route;
-
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/', function () {
     return view('welcome');
@@ -18,13 +18,9 @@ Route::get('/', function () {
 
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard'); // le agrego un name a la ruta
-
-Route::get('/dashboard',
- [DashboardController::class, 'listaImgHabitacion'])->middleware
- (['auth', 'verified','rol.AdminRecepcionista'])->name('dashboard');
+Route::get('/dashboard', function(){
+    return view('backoffice.dashboard'); // por buenas practicas el encarpetado va asi, dentro de backoffice
+})->middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
