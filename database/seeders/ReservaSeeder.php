@@ -50,6 +50,18 @@ class ReservaSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'id_usuario' => 1,
+                'id_habitacion' => 2,
+                'fecha_ingreso' => '2025-06-01',
+                'fecha_egreso' => '2025-06-05',
+                'id_promocion' => null,
+                'estado_reserva' => 'Activa',
+                'estado_pago' => 'Cancelado',
+                'precio_final' => 70000 * 4,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ];
 
         foreach ($reservas as $reserva) {

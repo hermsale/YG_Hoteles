@@ -25,6 +25,8 @@ class Habitacion extends Model
         return $this->belongsTo(Categoria::class, 'id_categoria');
     }
 
+    
+
     // 🔁 Una habitación tiene muchas imágenes
     public function imagenes()
     {

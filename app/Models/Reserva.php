@@ -7,6 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Reserva extends Model
 {
 
+protected $fillable = [
+
+        'fecha_ingreso',
+        'fecha_egreso',
+        'precio_final',
+        'estado_pago',
+        'estado_reserva',
+        'fecha_creacion',
+    ];
+
     /**
  * Relación con usuario.
  * Una reserva pertenece a un usuario.

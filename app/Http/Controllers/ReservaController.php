@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Reserva;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReservaController extends Controller
 {
@@ -11,8 +13,13 @@ class ReservaController extends Controller
      */
     public function index()
     {
-       return view('cliente.reservas.index');
+         $reservas = Reserva::where('id_usuario', Auth::id())
+                ->with(['habitacion.categoria']) // Carga eficiente para la tabla
+                ->get();
+
+    return view('cliente.reservas.index', compact('reservas'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -35,9 +42,14 @@ class ReservaController extends Controller
      */
     public function show(string $id)
     {
-        return view('cliente.reservas.detalle', [
-            'reserva' => $id,
-        ]);
+        $reserva = Reserva::with(['habitacion.categoria', 'habitacion.imagenes'])->findOrFail($id);
+
+     // Verificar que la reserva le pertenezca al usuario logueado
+        if ($reserva->id_usuario !== Auth::id()) {
+         abort(403, 'No tenés permiso para ver esta reserva.');
+        }
+
+    return view('cliente.reservas.detalle', compact('reserva'));
     }
 
     /**
