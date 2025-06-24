@@ -6,6 +6,7 @@ use App\Http\Controllers\ImagenController;
 use App\Http\Controllers\ProfileController;
 
 use App\Http\Controllers\ResenaController;
+use App\Http\Controllers\ReservaController;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -31,6 +32,10 @@ Route::get('/habitaciones', [HabitacionController::class, 'index'])->name('habit
 // ruta hacia cliente fotos
 Route::get('/fotos', [ImagenController::class, 'index'])->name('fotos.index');
 Route::get('/resenia', [ResenaController::class, 'index'])->name('resenia.index');
+
+// ruta hacia cliente reservas
+Route::get('/reserva', [ReservaController::class, 'index'])->middleware(['auth', 'verified'])->name('reservas.index');
+Route::get('/reserva/{id}', [ReservaController::class, 'show'])->middleware(['auth', 'verified'])->name('reservas.show');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

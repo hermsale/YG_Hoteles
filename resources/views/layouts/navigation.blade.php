@@ -9,10 +9,14 @@
             <span>YG Hoteles</span>
         </div>
 
+
         <!-- Navegación -->
         <div class="hidden sm:flex items-center gap-4">
             <input type="text" placeholder="Buscar" class="px-3 py-1 rounded text-black">
-            <a href="#" class="text-white hover:underline">Mis reservas</a>
+            <a href="{{ route('reservas.index') }}"
+            class="text-white hover:underline">
+            Mis reservas
+            </a>
             <a href="#" class="text-white hover:underline">Contáctanos</a>
 
             @auth
