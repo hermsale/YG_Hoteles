@@ -18,7 +18,7 @@ class ImagenController extends Controller
            // Obtener todas las imágenes
     $imagenes = Imagen::all();
     // Retornar una vista con las imágenes
-    return view('dashboard', compact('imagenes'));
+    return view('cliente.fotos.index', compact('imagenes'));
     }
 
     /**

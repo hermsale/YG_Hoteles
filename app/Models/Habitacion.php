@@ -31,12 +31,6 @@ class Habitacion extends Model
         return $this->hasMany(Imagen::class, 'id_habitacion');
     }
 
-    // // (Opcional) relaciones con reservas, amenities, promociones, etc., si las tenés
-    // public function reservas()
-    // {
-    //     return $this->hasMany(Reserva::class, 'id_habitacion');
-    // }
-
     // 1 habitacion puede tener muchos amenitys
     public function amenities()
     {

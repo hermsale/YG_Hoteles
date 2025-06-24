@@ -9,11 +9,13 @@ use Illuminate\Http\Request;
 class HabitacionController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * vistas de habitaciones
      */
     public function index()
     {
-        return view('cliente.habitaciones.habitaciones'); // Retorna la vista dashboard.blade.php
+        // Obtener todas las habitaciones
+        $habitaciones = Habitacion::All();
+        return view('cliente.habitaciones.index',  compact('habitaciones')); // Retorna la vista habitaciones.blade.php
         //
     }
 

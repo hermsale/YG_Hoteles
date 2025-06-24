@@ -2,11 +2,15 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HabitacionController;
+use App\Http\Controllers\ImagenController;
 use App\Http\Controllers\ProfileController;
 
+use App\Http\Controllers\ResenaController;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
+
+// ruta de bienvenida
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
@@ -22,8 +26,11 @@ Route::get('/', function () {
 Route::get('/dashboard', [DashboardController::class,'index']) // por buenas practicas el encarpetado va asi, dentro de backoffice
 ->middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('dashboard');
 
-// Route::get('/habitaciones', [HabitacionController::class,'index']);
+// ruta hacia cliente habitaciones
 Route::get('/habitaciones', [HabitacionController::class, 'index'])->name('habitaciones.index');
+// ruta hacia cliente fotos
+Route::get('/fotos', [ImagenController::class, 'index'])->name('fotos.index');
+Route::get('/resenia', [ResenaController::class, 'index'])->name('resenia.index');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
