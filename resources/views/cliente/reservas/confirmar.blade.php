@@ -49,7 +49,7 @@
                                 </div>
                                 <div>
                                     <span class="text-gray-500 italic">👤 Capacidad Máxima</span>
-                                    <p class="font-medium">{{ $huespedes }}</p>
+                                    <p class="font-medium">{{ $habitacion->capacidad }}</p>
                                 </div>
                             </div>
                         </div>
