@@ -37,8 +37,8 @@
                                     <p class="font-medium">{{ \Carbon\Carbon::parse($reserva->fecha_egreso)->format('d M. Y') }}</p>
                                 </div>
                                 <div>
-                                    <span class="text-gray-500 italic">👤 Huéspedes</span>
-                                    <p class="font-medium">{{ $reserva->habitacion->capacidad ?? 'No especificado' }}</p>
+                                    <span class="text-gray-500 italic">🌙 Cantidad de Noches</span>
+                                    <p class="font-medium">{{ $cantidadNoches ?? 'No especificado' }}</p>
                                 </div>
                                 <div>
                                     <span class="text-gray-500 italic">💰 Total</span>
@@ -84,19 +84,22 @@
                                         @if ($reserva->estado_pago === 'Pendiente' && !$reserva->aviso_pago)
                                              bg-green-600 hover:bg-green-700
                                                 @else
-                                                bg-gray-400 cursor-not-allowed'
+                                                bg-gray-400 cursor-default
                                             @endif"
                                         {{ $reserva->estado_pago === 'Cancelado' ? 'bg-gray-400  cursor-default'  : '' }}
                                         {{ $reserva->aviso_pago ? 'disabled' : '' }}>
                                         Aviso de Pago
                                     </button>
                                 </form>
-                                <button
-                                    class="px-5 py-2 rounded-xl text-white font-semibold
-                                        {{ $reserva->estado_pago === 'Cancelado' ? 'bg-gray-400  cursor-default'  : 'bg-red-600 hover:bg-red-700' }}"
-                                    {{ $reserva->estado_pago === 'Cancelado' ? 'disabled' : '' }}>
-                                    Cancelar Reserva
-                                </button>
+                                <form method="POST" action="{{ route('reservas.cancelarReserva', $reserva->id) }}">
+                                    @csrf
+                                    <button
+                                        class="px-5 py-2 rounded-xl text-white font-semibold
+                                            {{ $reserva->estado_reserva === 'Cancelada' ? 'bg-gray-400  cursor-default'  : 'bg-red-600 hover:bg-red-700' }}"
+                                        {{ $reserva->estado_reserva === 'Cancelada' ? 'disabled' : '' }}>
+                                        Cancelar Reserva
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

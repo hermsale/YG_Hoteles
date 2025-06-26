@@ -37,8 +37,10 @@ Route::get('/resenia', [ResenaController::class, 'index'])->name('resenia.index'
 Route::get('/reserva', [ReservaController::class, 'index'])->middleware(['auth', 'verified'])->name('reservas.index');
 Route::get('/reserva/confirmar', [ReservaController::class, 'confirmar'])->middleware(['auth', 'verified'])->name('reservas.confirmar');
 Route::get('/reserva/detalle/{id}', [ReservaController::class, 'detalleReserva'])->middleware(['auth', 'verified'])->name('reservas.detalleReserva');
+
 // se crea para mostrar el aviso de pago
-Route::post('/reserva/detalle/{id}', [ReservaController::class, 'avisoPago'])->name('reservas.avisoPago');
+Route::post('/reserva/detalle/{id}/aviso-pago', [ReservaController::class, 'avisoPago'])->name('reservas.avisoPago');
+Route::post('/reserva/detalle/{id}/cancelar', [ReservaController::class, 'cancelarReserva'])->name('reservas.cancelarReserva');
 
 // se crea la ruta para reservar una habitacion     ||controlador        || nombre de la funcion     || nombre de la ruta personalizada
 Route::post('/reserva/confirmar', [ReservaController::class, 'confirmarYGuardar'])->name('reservas.confirmarYGuardar');

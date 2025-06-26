@@ -102,12 +102,32 @@ class ReservaController extends Controller
         if ($reserva->estado_pago !== 'Pendiente') {
             return back()->with('error', 'No se puede dar aviso de pago en este estado.');
         }
+
          Log::info($reserva->aviso_pago);
         $reserva->aviso_pago = true;
         $reserva->save();
 
         return back()->with('success', 'Aviso de pago enviado correctamente.');
     }
+
+// boton para cancelar una reserva
+    public function cancelarReserva(string $id){
+        Log::info('Se ejecutó cancelar reserva');
+        $reserva = Reserva::where('id', $id)->where('id_usuario', Auth::id())->firstOrFail();
+
+        // Verificar si la reserva está en un estado que permite cancelación
+        if ($reserva->estado_reserva !== 'Activa') {
+            return back()->with('error', 'No se puede cancelar una reserva que no está activa.');
+        }
+
+        // Cambiar el estado de la reserva a cancelada
+        $reserva->estado_reserva = 'Cancelada';
+        $reserva->estado_pago = 'Cancelado';
+        $reserva->save();
+
+        return back()->with('success', 'Reserva cancelada correctamente.');
+    }
+
     /**
      * muestro los detalles de una reserva específica
      */
@@ -115,12 +135,19 @@ class ReservaController extends Controller
     {
         $reserva = Reserva::with(['habitacion.categoria', 'habitacion.imagenes'])->findOrFail($id);
 
+        // parseo las fechas de ingreso y egreso
+        $fechaIngreso = \Carbon\Carbon::parse($reserva->fecha_ingreso);
+        $fechaEgreso = \Carbon\Carbon::parse($reserva->fecha_egreso);
+
+        // Calcular la cantidad de noches
+        $cantidadNoches =   $fechaIngreso->diffInDays($fechaEgreso);
+
         // Verificar que la reserva le pertenezca al usuario logueado
         if ($reserva->id_usuario !== Auth::id()) {
             abort(403, 'No tenés permiso para ver esta reserva.');
         }
 
-        return view('cliente.reservas.detalle', compact('reserva'));
+        return view('cliente.reservas.detalle', compact('reserva','cantidadNoches'));
     }
 
     /**
