@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CalendarioController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HabitacionController;
 use App\Http\Controllers\ImagenController;
@@ -20,9 +21,13 @@ Route::get('/', function () {
 
 
 
-
+// backoffice
+// definimos la ruta de acceso '/dashboard' y por medio de un array accedemos al DashboardController y le indicamos el metodo a ejecutar
 Route::get('/dashboard', [DashboardController::class,'index']) // por buenas practicas el encarpetado va asi, dentro de backoffice
 ->middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('dashboard');
+Route::get('/calendario', [CalendarioController::class, 'index'])->
+middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('calendario.index');
+
 
 // ruta hacia cliente habitaciones
 Route::get('/habitaciones', [HabitacionController::class, 'index'])->name('habitaciones.index');

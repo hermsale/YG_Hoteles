@@ -16,7 +16,8 @@ class CreateReservasTable extends Migration
             $table->string('estado_pago')->default('Pendiente'); // al crearse una reserva su estado de pago es Pendiente
             $table->string('estado_reserva')->default('Activa'); // al crearse una reserva su estado es Activa
             $table->timestamp('fecha_creacion')->useCurrent();
-            $table->boolean('aviso_pago')->default(false)->after('estado_pago');
+            $table->boolean('aviso_pago')->default(false)->after('estado_pago'); // Indica si se ha enviado un aviso de pago
+            $table->boolean('check_in')->default(false); // Indica si se ha realizado el check-in
             $table->foreignId('id_habitacion')->constrained('habitaciones')->onDelete('cascade');
             $table->foreignId('id_usuario')->constrained('users')->onDelete('cascade');
             $table->foreignId('id_promocion')->nullable()->constrained('promociones')->onDelete('cascade');
