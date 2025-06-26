@@ -74,7 +74,7 @@ class ReservaController extends Controller
         $reserva->estado_pago = 'Pendiente'; // Estado inicial de pago
         $reserva->save();
 
-        return redirect()->route('welcome')->with('success', 'Reserva confirmada correctamente.');
+        return redirect()->route('reserva')->with('success', 'Reserva confirmada correctamente.');
     }
 
     /**
