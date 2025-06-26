@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Habitacion;
 use App\Models\Reserva;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,47 +10,60 @@ use Illuminate\Support\Facades\Auth;
 class ReservaController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * muestro todas las reservas del usuario logueado
      */
     public function index()
     {
-         $reservas = Reserva::where('id_usuario', Auth::id())
-                ->with(['habitacion.categoria']) // Carga eficiente para la tabla
-                ->get();
+        $reservas = Reserva::where('id_usuario', Auth::id())
+            ->with(['habitacion.categoria']) // Carga eficiente para la tabla
+            ->get();
 
-    return view('cliente.reservas.index', compact('reservas'));
+        return view('cliente.reservas.index', compact('reservas'));
     }
 
 
     /**
-     * Show the form for creating a new resource.
+     * pantalla para confirmar una reserva
      */
-    public function create()
-    {
-        //
-    }
 
+
+    // método para confirmar una reserva
+    public function confirmar(Request $request)
+    {
+        $habitacion = Habitacion::with('categoria')->findOrFail($request->habitacion_id);
+
+        $fechaEntrada = new \Carbon\Carbon($request->fecha_entrada);
+        $fechaSalida = new \Carbon\Carbon($request->fecha_salida);
+        $cantidadNoches = $fechaEntrada->diffInDays($fechaSalida);
+        $importeTotal = $cantidadNoches * $habitacion->precio_noche;
+
+        return view('cliente.reservas.confirmar', [
+            'habitacion' => $habitacion,
+            'fechaEntrada' => $fechaEntrada->format('d/m/Y'),
+            'fechaSalida' => $fechaSalida->format('d/m/Y'),
+            'cantidadNoches' => $cantidadNoches,
+            'importeTotal' => $importeTotal,
+            'huespedes' => $request->huespedes,
+        ]);
+    }
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        //
-    }
+    public function store(Request $request) {}
 
     /**
-     * Display the specified resource.
+     * muestro los detalles de una reserva específica
      */
-    public function show(string $id)
+    public function detalleReserva(string $id)
     {
         $reserva = Reserva::with(['habitacion.categoria', 'habitacion.imagenes'])->findOrFail($id);
 
-     // Verificar que la reserva le pertenezca al usuario logueado
+        // Verificar que la reserva le pertenezca al usuario logueado
         if ($reserva->id_usuario !== Auth::id()) {
-         abort(403, 'No tenés permiso para ver esta reserva.');
+            abort(403, 'No tenés permiso para ver esta reserva.');
         }
 
-    return view('cliente.reservas.detalle', compact('reserva'));
+        return view('cliente.reservas.detalle', compact('reserva'));
     }
 
     /**

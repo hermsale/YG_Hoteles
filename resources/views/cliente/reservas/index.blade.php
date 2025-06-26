@@ -33,7 +33,7 @@
                                 <td class="px-4 py-2 border">{{$reserva->fecha_egreso}} </td>
                                 <td class="px-4 py-2 border">{{ $reserva->precio_final }}</td>
                                 <td class="px-4 py-2 border text-blue-600 hover:underline cursor-pointer">
-                                    <a href="{{ route('reservas.show', $reserva->id) }}" class="text-blue-600 hover:underline">
+                                    <a href="{{ route('detalleReserva', $reserva->id) }}" class="text-blue-600 hover:underline">
                                         Ver detalles
                                     </a>
                                 </td>

@@ -1,6 +1,7 @@
 <x-app-layout>
-     <!-- formulario de reserva -->
-            <x-formulario-reserva />
+    <!-- formulario de reserva -->
+    <x-formulario-reserva />
+
 
     <!-- cito el componente de navbar -->
     <x-navbar />
@@ -22,7 +23,7 @@
                 @endphp
 
                 @if($imagenPrincipal)
-                <img src="{{ asset($imagenPrincipal->url) }}" alt="Imagen de {{ $habitacion->nombre }}"  class="w-full md:w-1/3 max-h-64 object-cover rounded-lg">
+                <img src="{{ asset($imagenPrincipal->url) }}" alt="Imagen de {{ $habitacion->nombre }}" class="w-full md:w-1/3 max-h-64 object-cover rounded-lg">
                 @else
                 <img src="{{ asset('img/no-image.png') }}" alt="Sin imagen" class="w-full md:w-1/3 rounded-lg object-cover">
                 @endif
@@ -57,7 +58,12 @@
                                 {{ number_format($habitacion->precio_noche, 2, ',', '.') }} ARS
                             </span>
                         </p>
-                        <a href="#" class="mt-2 sm:mt-0 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                        <a href="{{ route('reservas.confirmar', [
+                                                        'habitacion_id' => $habitacion->id,
+                                                        'fecha_entrada' => request('fecha_entrada'),
+                                                        'fecha_salida' => request('fecha_salida'),
+                                                        'huespedes' => request('huespedes'),
+                                ]) }}" class="mt-2 sm:mt-0 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
                             Reservar Ahora
                         </a>
                     </div>

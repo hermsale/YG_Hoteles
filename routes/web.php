@@ -35,7 +35,9 @@ Route::get('/resenia', [ResenaController::class, 'index'])->name('resenia.index'
 
 // ruta hacia cliente reservas
 Route::get('/reserva', [ReservaController::class, 'index'])->middleware(['auth', 'verified'])->name('reservas.index');
-Route::get('/reserva/{id}', [ReservaController::class, 'show'])->middleware(['auth', 'verified'])->name('reservas.show');
+Route::get('/reserva/confirmar', [ReservaController::class, 'confirmar'])->name('reservas.confirmar');
+Route::get('/reserva/detalle/{id}', [ReservaController::class, 'detalleReserva'])->middleware(['auth', 'verified'])->name('detalleReserva');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
