@@ -23,6 +23,7 @@ class ReservaSeeder extends Seeder
                 'estado_reserva' => 'Activa',
                 'estado_pago' => 'Pagado',
                 'precio_final' => 70000 * 4,
+                'aviso_pago' => true, // Estado inicial aviso de pago
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -35,6 +36,7 @@ class ReservaSeeder extends Seeder
                 'estado_reserva' => 'Activa',
                 'estado_pago' => 'Pendiente',
                 'precio_final' => 90000 * 3 * 0.9,
+                'aviso_pago' => false, // Estado inicial aviso de pago
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -47,6 +49,7 @@ class ReservaSeeder extends Seeder
                 'estado_reserva' => 'Finalizada',
                 'estado_pago' => 'Pagado',
                 'precio_final' => 130000 * 3 * 0.75,
+                'aviso_pago' => true, // Estado inicial aviso de pago
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -56,9 +59,10 @@ class ReservaSeeder extends Seeder
                 'fecha_ingreso' => '2025-06-01',
                 'fecha_egreso' => '2025-06-05',
                 'id_promocion' => null,
-                'estado_reserva' => 'Activa',
+                'estado_reserva' => 'Cancelada',
                 'estado_pago' => 'Cancelado',
                 'precio_final' => 70000 * 4,
+                'aviso_pago' => true, // Estado inicial aviso de pago
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

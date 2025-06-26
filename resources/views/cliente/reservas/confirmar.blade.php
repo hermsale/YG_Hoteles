@@ -1,69 +1,83 @@
 <x-app-layout>
-
-    <section class="relative h-screen bg-cover bg-center"
+    <section class="relative min-h-screen bg-cover bg-center"
         style="background-image: url('{{ asset('img/otros/fondo-inicio.png') }}');">
-        <div class="py-16">
-            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="bg-white shadow-lg rounded-lg p-6">
+        <div class="py-24 bg-black bg-opacity-50">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-white shadow-xl rounded-2xl p-8">
 
+                    {{-- Título --}}
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                        📋 Confirmar Reserva
+                    </h2>
 
-                    <div class="md:col-span-2 space-y-2 text-gray-800">
-                        <h3 class="text-lg italic font-semibold">Confirmar Reserva</h3>
-                        <p class="text-base text-gray-600">Estás a punto de reservar la siguiente habitación:</p>
+                    <p class="text-gray-600 mb-4">
+                        Estás a punto de reservar la siguiente habitación. Por favor, revisá los datos antes de confirmar.
+                    </p>
 
-                        <h4 class="text-md font-semibold">Habitación Nro</h4>
-                        <p class="text-sm text-gray-600">{{ $habitacion->codigo_habitacion }}</p>
-
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 text-sm">
-                            <div>
-                                <span class="italic text-gray-500">Fecha Ingreso</span>
-                                <p class="text-gray-900 font-medium">{{ $fechaEntrada }}</p>
-                            </div>
-                            <div>
-                                <span class="italic text-gray-500">Fecha Egreso</span>
-                                <p class="text-gray-900 font-medium">{{ $fechaSalida }}</p>
-                            </div>
-                            <div>
-                                <span class="italic text-gray-500">Cantidad de Noches</span>
-                                <p class="text-gray-900 font-medium">{{ $cantidadNoches }}</p>
-                            </div>
-                            <div>
-                                <span class="italic text-gray-500">Importe Total</span>
-                                <p class="text-gray-900 font-medium">${{ number_format($importeTotal, 2, ',', '.') }} ARS</p>
-                            </div>
-                            <div>
-                                <span class="italic text-gray-500">Huéspedes</span>
-                                <p class="text-gray-900 font-medium">{{ $huespedes }}</p>
-                            </div>
+                    {{-- Datos habitación --}}
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start mb-8">
+                        {{-- Imagen --}}
+                        <div>
+                            <img src="{{ asset($habitacion->imagenes->first()->url) }}"
+                                 alt="Imagen habitación"
+                                 class="rounded-lg shadow-md w-full h-64 object-cover">
                         </div>
 
-                        {{-- Botones --}}
-                        <form method="POST"  action="{{ route('reservas.store') }}"  class="mt-6">
-                            @csrf
-                            {{-- Datos ocultos --}}
-                            <input type="hidden" name="habitacion_id" value="{{$habitacion->id}}">
-                            <input type="hidden" name="fecha_ingreso" value="{{ $fechaEntrada }}">
-                            <input type="hidden" name="fecha_egreso" value="{{ $fechaSalida }}">
-                            <input type="hidden" name="precio_total" value="{{ $importeTotal }}">
-
-                            <div class="flex flex-col md:flex-row gap-4">
-                                <button type="submit"
-                                    class="px-5 py-2 rounded shadow font-semibold text-white bg-green-600 hover:bg-green-700">
-                                    Confirmar Reserva
-                                </button>
-
-                                <a href="{{ route('habitaciones.index') }}"
-                                    class="px-5 py-2 rounded shadow text-white bg-gray-500 hover:bg-gray-600 text-center">
-                                    Volver
-                                </a>
+                        {{-- Info --}}
+                        <div class="md:col-span-2 space-y-4 text-gray-800 text-sm">
+                            <div>
+                                <h3 class="text-lg font-semibold italic">
+                                    Habitación N° {{ $habitacion->codigo_habitacion }}
+                                </h3>
                             </div>
-                        </form>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <span class="text-gray-500 italic">📅 Fecha Ingreso</span>
+                                    <p class="font-medium">{{ $fechaEntrada }}</p>
+                                </div>
+                                <div>
+                                    <span class="text-gray-500 italic">📅 Fecha Egreso</span>
+                                    <p class="font-medium">{{ $fechaSalida }}</p>
+                                </div>
+                                <div>
+                                    <span class="text-gray-500 italic">🌙 Cantidad de Noches</span>
+                                    <p class="font-medium">{{ $cantidadNoches }}</p>
+                                </div>
+                                <div>
+                                    <span class="text-gray-500 italic">💳 Importe Total</span>
+                                    <p class="font-medium">${{ number_format($importeTotal, 2, ',', '.') }} ARS</p>
+                                </div>
+                                <div>
+                                    <span class="text-gray-500 italic">👤 Capacidad Máxima</span>
+                                    <p class="font-medium">{{ $huespedes }}</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
+                    {{-- Formulario --}}
+                    <form method="POST" action="{{ route('reservas.confirmarYGuardar') }}">
+                        @csrf
+                        {{-- Campos ocultos --}}
+                        <input type="hidden" name="habitacion_id" value="{{ $habitacion->id }}">
+                        <input type="hidden" name="fecha_ingreso" value="{{ $fechaEntrada }}">
+                        <input type="hidden" name="fecha_egreso" value="{{ $fechaSalida }}">
+                        <input type="hidden" name="precio_total" value="{{ $importeTotal }}">
 
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <button type="submit"
+                                class="px-5 py-2 rounded-xl shadow font-semibold text-white bg-green-600 hover:bg-green-700 transition">
+                                ✅ Confirmar Reserva
+                            </button>
+
+                            <a href="{{ route('habitaciones.index') }}"
+                               class="px-5 py-2 rounded-xl shadow text-white bg-gray-500 hover:bg-gray-600 text-center transition">
+                                🔙 Volver
+                            </a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-
     </section>
 </x-app-layout>

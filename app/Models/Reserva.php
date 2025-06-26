@@ -16,6 +16,7 @@ protected $fillable = [
         'estado_pago',
         'estado_reserva',
         'fecha_creacion',
+        'aviso_pago',
     ];
 
     /**

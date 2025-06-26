@@ -14,6 +14,26 @@
                 YGHoteles ofrece 15 exclusivas habitaciones diseñadas para brindar confort y descanso en el corazón de Las Leñas. Algunas de ellas cuentan con balcones privados con vista a las montañas, y están equipadas con minibar y zona de comedor para quienes prefieren opciones de autoservicio.
                 Cada habitación ha sido cuidadosamente insonorizada e incluye un amplio escritorio, ideal tanto para el relax como para el trabajo. Los baños están equipados con bañera y ducha, además de artículos de tocador de cortesía. Algunas habitaciones también ofrecen vistas panorámicas al entorno natural de la cordillera, creando una experiencia única de conexión con la montaña.
             </p>
+<!-- class="h-10 w-10 text-yellow-500"  -->
+            <!-- esto se ejecuta si no hay habitaciones disponibles para la fecha -->
+            @if ($habitaciones->isEmpty())
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-6 rounded-lg shadow-md text-yellow-800 mt-8 max-w-2xl mx-auto text-center">
+                <div class="flex flex-col items-center space-y-4">
+                     <img src="{{ asset('img/otros/no-se-encontro.png') }}" alt="Imagen de no se encontro" class="w-full md:w-1/3 max-h-64 object-cover rounded-lg">
+
+                    <h3 class="text-xl font-semibold">No se encontraron habitaciones disponibles</h3>
+                    <p class="text-sm text-gray-700">
+                        Lo sentimos, no hay habitaciones que coincidan con los parámetros seleccionados.
+                        Te recomendamos modificar las fechas o la cantidad de huéspedes e intentarlo nuevamente.
+                    </p>
+
+                    <a href="{{ route('habitaciones.index') }}"
+                        class="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded shadow">
+                        Cambiar búsqueda
+                    </a>
+                </div>
+            </div>
+            @endif
 
             @foreach($habitaciones as $habitacion)
             <div class="bg-gray-100 text-black rounded-lg shadow p-6 mb-10 flex flex-col md:flex-row gap-6">

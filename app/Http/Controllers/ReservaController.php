@@ -6,6 +6,7 @@ use App\Models\Habitacion;
 use App\Models\Reserva;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ReservaController extends Controller
 {
@@ -15,7 +16,8 @@ class ReservaController extends Controller
     public function index()
     {
         $reservas = Reserva::where('id_usuario', Auth::id())
-            ->with(['habitacion.categoria']) // Carga eficiente para la tabla
+            ->with(['habitacion.categoria'])
+            ->orderBy('fecha_creacion', 'desc') // Carga eficiente para la tabla
             ->get();
 
         return view('cliente.reservas.index', compact('reservas'));
@@ -28,12 +30,14 @@ class ReservaController extends Controller
     // método para confirmar una reserva
     public function confirmar(Request $request)
     {
+
         $habitacion = Habitacion::with('categoria')->findOrFail($request->habitacion_id);
+
 
         $fechaEntrada = new \Carbon\Carbon($request->fecha_entrada);
         $fechaSalida = new \Carbon\Carbon($request->fecha_salida);
-        $cantidadNoches = $fechaEntrada->diffInDays($fechaSalida);
-        $importeTotal = $cantidadNoches * $habitacion->precio_noche;
+        $cantidadNoches = $fechaEntrada->diffInDays($fechaSalida); // calculo la cantidad de noches entre las fechas
+        $importeTotal = $cantidadNoches * $habitacion->precio_noche; // calculo del importe total
 
         return view('cliente.reservas.confirmar', [
             'habitacion' => $habitacion,
@@ -47,16 +51,23 @@ class ReservaController extends Controller
     /**
      * funcion para confirmar y almacenar una reserva
      */
-    public function store(Request $request)
+    public function confirmarYGuardar(Request $request)
     {
-        // validamos los datos de la reserva
-        $request->validate([
-            'habitacion_id' => 'required|exists:habitaciones,id',
-            'fecha_ingreso' => 'required|date',
-            'fecha_egreso' => 'required|date|after:fecha_ingreso',
-            'huespedes' => 'required|integer|min:1',
-            'precio_total' => 'required|numeric|min:0',
-        ]);
+        Log::info('Se ejecutó confirmar y guardar Reserva');
+
+        try {
+            // validamos los datos de la reserva
+            $request->validate([
+                'habitacion_id' => 'required|exists:habitaciones,id',
+                'fecha_ingreso' => ['required', 'regex:/^\d{2}\/\d{2}\/\d{4}$/'], // Formato dd/mm/yyyy
+                'fecha_egreso' => ['required', 'regex:/^\d{2}\/\d{2}\/\d{4}$/'],
+                'precio_total' => 'required|numeric|min:0',
+            ]);
+            Log::info('Datos de reserva validados correctamente');
+        } catch (\Exception $e) {
+            Log::error('Error al validar los datos de la reserva: ' . $e->getMessage());
+            return redirect()->back()->withErrors($e->getMessage())->withInput();
+        }
         // Verificamos que el usuario esté autenticado
         if (!Auth::check()) {
             return redirect()->route('login')->with('error', 'Debés iniciar sesión para reservar.');
@@ -72,11 +83,31 @@ class ReservaController extends Controller
         $reserva->precio_final = $request->precio_total;
         $reserva->estado_reserva = 'Activa';
         $reserva->estado_pago = 'Pendiente'; // Estado inicial de pago
-        $reserva->save();
+        $reserva->aviso_pago = false; // Estado inicial aviso de pago
+        $reserva->fecha_creacion = now();
 
-        return redirect()->route('reserva')->with('success', 'Reserva confirmada correctamente.');
+        $reserva->save();
+        // registramos la reserva en el log
+        Log::info('ID de reserva creada: ' . $reserva->id);
+        // redirigimos al usuario a la lista de reservas con un mensaje de éxito
+        return redirect()->route('reservas.index')->with('success', 'Reserva confirmada correctamente.');
     }
 
+    // funcion para dar aviso de pago de una reserva
+    public function avisoPago(string $id)
+    {
+         Log::info('Se ejecutó aviso de pago');
+        $reserva = Reserva::where('id', $id)->where('id_usuario', Auth::id())->firstOrFail();
+
+        if ($reserva->estado_pago !== 'Pendiente') {
+            return back()->with('error', 'No se puede dar aviso de pago en este estado.');
+        }
+         Log::info($reserva->aviso_pago);
+        $reserva->aviso_pago = true;
+        $reserva->save();
+
+        return back()->with('success', 'Aviso de pago enviado correctamente.');
+    }
     /**
      * muestro los detalles de una reserva específica
      */
