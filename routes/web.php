@@ -19,9 +19,6 @@ Route::get('/', function () {
 // // definimos la ruta de acceso '/cursos' y por medio de un array accedemos al CursoController y le indicamos el metodo a ejecutar
 
 
-//  el metodo 'updateDescripcion'  es la comunicacion controlador. y el name es lo que hace la conexion con la vista, donde hay un form y un route
-// Route::put('/cursos/{curso}', [CursoController::class, 'updateDescripcion'])->name('cursos.updateDescripcion');
-
 
 
 Route::get('/dashboard', [DashboardController::class,'index']) // por buenas practicas el encarpetado va asi, dentro de backoffice
@@ -38,8 +35,10 @@ Route::get('/resenia', [ResenaController::class, 'index'])->name('resenia.index'
 
 // ruta hacia cliente reservas
 Route::get('/reserva', [ReservaController::class, 'index'])->middleware(['auth', 'verified'])->name('reservas.index');
-Route::get('/reserva/confirmar', [ReservaController::class, 'confirmar'])->name('reservas.confirmar');
+Route::get('/reserva/confirmar', [ReservaController::class, 'confirmar'])->middleware(['auth', 'verified'])->name('reservas.confirmar');
 Route::get('/reserva/detalle/{id}', [ReservaController::class, 'detalleReserva'])->middleware(['auth', 'verified'])->name('detalleReserva');
+// se crea la ruta para reservar una habitacion
+Route::post('/reserva', [ReservaController::class, 'store'])->name('reservas.store');
 
 
 Route::middleware('auth')->group(function () {

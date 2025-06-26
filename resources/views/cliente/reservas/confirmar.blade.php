@@ -38,14 +38,13 @@
                         </div>
 
                         {{-- Botones --}}
-                        <form method="POST" class="mt-6">
+                        <form method="POST"  action="{{ route('reservas.store') }}"  class="mt-6">
                             @csrf
                             {{-- Datos ocultos --}}
-                            <input type="hidden" name="habitacion_id" value="301">
-                            <input type="hidden" name="fecha_ingreso" value="22/10/2025">
-                            <input type="hidden" name="fecha_egreso" value="30/10/2025">
-                            <input type="hidden" name="huespedes" value="1">
-                            <input type="hidden" name="precio_total" value="1000">
+                            <input type="hidden" name="habitacion_id" value="{{$habitacion->id}}">
+                            <input type="hidden" name="fecha_ingreso" value="{{ $fechaEntrada }}">
+                            <input type="hidden" name="fecha_egreso" value="{{ $fechaSalida }}">
+                            <input type="hidden" name="precio_total" value="{{ $importeTotal }}">
 
                             <div class="flex flex-col md:flex-row gap-4">
                                 <button type="submit"

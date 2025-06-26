@@ -59,6 +59,7 @@ class HabitacionController extends Controller
                     });
             });
         }
+        
         // Obtener todas las habitaciones
         $habitaciones =  $query->with(['imagenes', 'categoria', 'amenities'])->get();
         return view('cliente.habitaciones.disponibilidad', compact('habitaciones')); // Retorna la vista disponibilidad.blade.php

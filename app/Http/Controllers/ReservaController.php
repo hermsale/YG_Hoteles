@@ -25,8 +25,6 @@ class ReservaController extends Controller
     /**
      * pantalla para confirmar una reserva
      */
-
-
     // método para confirmar una reserva
     public function confirmar(Request $request)
     {
@@ -47,9 +45,37 @@ class ReservaController extends Controller
         ]);
     }
     /**
-     * Store a newly created resource in storage.
+     * funcion para confirmar y almacenar una reserva
      */
-    public function store(Request $request) {}
+    public function store(Request $request)
+    {
+        // validamos los datos de la reserva
+        $request->validate([
+            'habitacion_id' => 'required|exists:habitaciones,id',
+            'fecha_ingreso' => 'required|date',
+            'fecha_egreso' => 'required|date|after:fecha_ingreso',
+            'huespedes' => 'required|integer|min:1',
+            'precio_total' => 'required|numeric|min:0',
+        ]);
+        // Verificamos que el usuario esté autenticado
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Debés iniciar sesión para reservar.');
+        }
+
+        // creamos una nueva reserva
+        // y asignamos los datos del request
+        $reserva = new Reserva();
+        $reserva->id_usuario = Auth::id(); // o $request->user()->id
+        $reserva->id_habitacion = $request->habitacion_id;
+        $reserva->fecha_ingreso = \Carbon\Carbon::createFromFormat('d/m/Y', $request->fecha_ingreso);
+        $reserva->fecha_egreso = \Carbon\Carbon::createFromFormat('d/m/Y', $request->fecha_egreso);
+        $reserva->precio_final = $request->precio_total;
+        $reserva->estado_reserva = 'Activa';
+        $reserva->estado_pago = 'Pendiente'; // Estado inicial de pago
+        $reserva->save();
+
+        return redirect()->route('welcome')->with('success', 'Reserva confirmada correctamente.');
+    }
 
     /**
      * muestro los detalles de una reserva específica

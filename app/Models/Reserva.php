@@ -8,7 +8,8 @@ class Reserva extends Model
 {
 
 protected $fillable = [
-
+        'id_usuario',
+        'id_habitacion',
         'fecha_ingreso',
         'fecha_egreso',
         'precio_final',
