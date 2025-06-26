@@ -9,7 +9,7 @@
            Descripción
         </a>
         <a href="{{ route('habitaciones.index') }}"
-           class="{{ $current === 'habitaciones.index' ? 'bg-blue-500' : 'bg-gray-700 hover:bg-gray-600' }} px-4 py-2">
+           class="{{ $current === 'habitaciones.index' || $current === 'habitaciones.disponibilidad'  ? 'bg-blue-500' : 'bg-gray-700 hover:bg-gray-600' }} px-4 py-2">
            Habitaciones
         </a>
           <a href="{{ route('fotos.index') }}"

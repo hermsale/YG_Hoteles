@@ -58,7 +58,14 @@
                                 {{ number_format($habitacion->precio_noche, 2, ',', '.') }} ARS
                             </span>
                         </p>
-                        
+                        <a href="{{ route('reservas.confirmar', [
+                                                        'habitacion_id' => $habitacion->id,
+                                                        'fecha_entrada' => request('fecha_entrada'),
+                                                        'fecha_salida' => request('fecha_salida'),
+                                                        'huespedes' => request('huespedes'),
+                                ]) }}" class="mt-2 sm:mt-0 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                            Reservar Ahora
+                        </a>
                     </div>
                 </div>
             </div>

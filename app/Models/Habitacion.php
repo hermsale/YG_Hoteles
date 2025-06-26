@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Habitacion extends Model
 {
-  protected $table = 'habitaciones';
+    protected $table = 'habitaciones';
 
     protected $fillable = [
         'nombre',
@@ -25,7 +25,7 @@ class Habitacion extends Model
         return $this->belongsTo(Categoria::class, 'id_categoria');
     }
 
-    
+
 
     // 🔁 Una habitación tiene muchas imágenes
     public function imagenes()
@@ -37,5 +37,11 @@ class Habitacion extends Model
     public function amenities()
     {
         return $this->belongsToMany(Amenity::class, 'habitacion_amenity', 'id_habitacion', 'id_amenity');
+    }
+
+    // 🔁 Una habitación tiene muchas reservas -- utilizado para filtrar la disponibilidad
+    public function reservas()
+    {
+        return $this->hasMany(Reserva::class, 'id_habitacion');
     }
 }

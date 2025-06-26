@@ -29,6 +29,9 @@ Route::get('/dashboard', [DashboardController::class,'index']) // por buenas pra
 
 // ruta hacia cliente habitaciones
 Route::get('/habitaciones', [HabitacionController::class, 'index'])->name('habitaciones.index');
+Route::get('/habitaciones/disponibilidad', [HabitacionController::class, 'disponibilidad'])->name('habitaciones.disponibilidad');
+
+
 // ruta hacia cliente fotos
 Route::get('/fotos', [ImagenController::class, 'index'])->name('fotos.index');
 Route::get('/resenia', [ResenaController::class, 'index'])->name('resenia.index');
