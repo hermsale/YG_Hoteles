@@ -23,6 +23,19 @@ class ReservaController extends Controller
         return view('cliente.reservas.index', compact('reservas'));
     }
 
+    public function indexBackoffice()
+    {
+        if (!in_array(Auth::user()->rol->nombre_rol, ['Administrador', 'Recepcionista'])) {
+            abort(403, 'Acceso no autorizado.');
+        }
+
+        $reservas = Reserva::with(['usuario', 'habitacion.categoria'])
+            ->orderByDesc('fecha_creacion')
+            ->get();
+
+        return view('backoffice.reservas.index', compact('reservas'));
+    }
+
 
     /**
      * pantalla para confirmar una reserva
@@ -96,22 +109,44 @@ class ReservaController extends Controller
     // funcion para dar aviso de pago de una reserva
     public function avisoPago(string $id)
     {
-         Log::info('Se ejecutó aviso de pago');
+        Log::info('Se ejecutó aviso de pago');
         $reserva = Reserva::where('id', $id)->where('id_usuario', Auth::id())->firstOrFail();
 
         if ($reserva->estado_pago !== 'Pendiente') {
             return back()->with('error', 'No se puede dar aviso de pago en este estado.');
         }
 
-         Log::info($reserva->aviso_pago);
+        Log::info($reserva->aviso_pago);
         $reserva->aviso_pago = true;
         $reserva->save();
 
         return back()->with('success', 'Aviso de pago enviado correctamente.');
     }
 
-// boton para cancelar una reserva
-    public function cancelarReserva(string $id){
+    // funcion para confirmar el pago de una reserva
+    // Esta función se ejecuta cuando el usuario confirma que ha realizado el pago
+    // y el administrador o recepcionista confirma que si se pago
+    public function pagoConfirmado(string $id)
+    {
+        if (!in_array(Auth::user()->rol->nombre_rol, ['Administrador', 'Recepcionista'])) {
+            abort(403, 'Acceso no autorizado.');
+        }
+
+        $reserva = Reserva::findOrFail($id);
+
+        if ($reserva->estado_pago !== 'Pendiente' || !$reserva->aviso_pago) {
+            return back()->with('error', 'El pago no puede confirmarse. Verificá el estado.');
+        }
+
+        $reserva->estado_pago = 'Pagado';
+        $reserva->save();
+
+        return back()->with('success', 'Pago confirmado correctamente.');
+    }
+
+    // boton para cancelar una reserva
+    public function cancelarReserva(string $id)
+    {
         Log::info('Se ejecutó cancelar reserva');
         $reserva = Reserva::where('id', $id)->where('id_usuario', Auth::id())->firstOrFail();
 
@@ -147,7 +182,7 @@ class ReservaController extends Controller
             abort(403, 'No tenés permiso para ver esta reserva.');
         }
 
-        return view('cliente.reservas.detalle', compact('reserva','cantidadNoches'));
+        return view('cliente.reservas.detalle', compact('reserva', 'cantidadNoches'));
     }
 
     /**

@@ -15,10 +15,10 @@
             @endif
             <form method="GET" action="{{ route('habitaciones.disponibilidad') }}" id="formulario-filtro">
                 <label class="block text-sm">Fecha de entrada</label>
-                <input type="date" name="fecha_entrada" class="w-full border rounded p-1 mb-3" value="{{ request('fecha_entrada') ?? '2025-04-03' }}">
+                <input type="date" name="fecha_entrada" class="w-full border rounded p-1 mb-3" value="{{ request('fecha_entrada') ?? now()->toDateString() }}">
 
                 <label class="block text-sm">Fecha de salida</label>
-                <input type="date" name="fecha_salida" class="w-full border rounded p-1 mb-3" value="{{ request('fecha_salida') ?? '2025-04-04' }}">
+                <input type="date" name="fecha_salida" class="w-full border rounded p-1 mb-3" value="{{ request('fecha_salida') ?? now()->addDay()->toDateString() }}">
 
                 <label class="block text-sm">Huéspedes</label>
                 <select name="huespedes" class="w-full border rounded p-1">

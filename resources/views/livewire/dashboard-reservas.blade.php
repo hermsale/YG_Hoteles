@@ -47,8 +47,8 @@
             @forelse($reservas as $reserva)
                 <tr class="border-b">
                     <td class="py-2 text-blue-600">{{ $reserva->usuario->name ?? 'N/A' }}</td>
-                    <td>#{{ $reserva->id }}</td>
-                    <td>{{ $reserva->habitacion->nombre ?? 'N/A' }}</td>
+                    <td class="py-2 text-blue-600">#{{ $reserva->id }}</td>
+                    <td class="py-2 text-blue-600">{{ $reserva->habitacion->nombre ?? 'N/A' }}</td>
                     <td class="flex gap-2 items-center">
                         @if ($reserva->check_in)
                             <span class="text-green-600">Check-in hecho</span>

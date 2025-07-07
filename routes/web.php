@@ -28,6 +28,10 @@ Route::get('/dashboard', [DashboardController::class,'index']) // por buenas pra
 Route::get('/calendario', [CalendarioController::class, 'index'])->
 middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('calendario.index');
 
+Route::get('/dashboard/reservas', [ReservaController::class, 'indexBackoffice'])
+->middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('reservas.indexBackoffice');
+
+Route::post('/reservas/{id}/confirmar-pago', [ReservaController::class, 'pagoConfirmado'])->name('reservas.pagoConfirmado');
 
 // ruta hacia cliente habitaciones
 Route::get('/habitaciones', [HabitacionController::class, 'index'])->name('habitaciones.index');
