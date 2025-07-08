@@ -2,10 +2,19 @@
     <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
         <!-- Logo + Marca -->
         <div class="flex items-center gap-3 text-white text-xl font-bold">
+            @auth
+            @if (in_array(auth()->user()->rol->nombre_rol, ['Administrador','Recepcionista']))
+            <a href="{{ route('dashboard') }}">
+                <img src="{{ asset('img/otros/icon-hotel.png') }}" alt="Logo del hotel"
+                    class="w-10 h-10 object-contain">
+            </a>
+            @else
             <a href="/">
                 <img src="{{ asset('img/otros/icon-hotel.png') }}" alt="Logo del hotel"
                     class="w-10 h-10 object-contain">
             </a>
+            @endif
+            @endauth
             <span>YG Hoteles</span>
         </div>
 
@@ -25,6 +34,7 @@
             </a>
             @endif
             @endauth
+
             <a href="{{ route('contacto.index') }}" class="text-white hover:underline">Contáctanos</a>
 
             @auth
@@ -44,6 +54,9 @@
                     @if (in_array(auth()->user()->rol->nombre_rol, ['Administrador','Recepcionista']))
                     <x-dropdown-link :href="route('dashboard')">
                         {{ __('Dashboard') }}
+                    </x-dropdown-link>
+                    <x-dropdown-link :href="route('welcome')">
+                        {{ __('Home') }}
                     </x-dropdown-link>
                     @endif
                     <x-dropdown-link :href="route('profile.edit')">
