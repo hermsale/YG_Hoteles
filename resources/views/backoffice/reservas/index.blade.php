@@ -1,4 +1,5 @@
 <x-app-layout>
+
     <section class="relative min-h-screen bg-cover bg-center"
         style="background-image: url('{{ asset('img/otros/fondo-inicio.png') }}');">
 
@@ -62,11 +63,16 @@
 
                                 {{-- Estado de Pago --}}
                                 <td class="px-4 py-3">
-                                    <span class="font-semibold
-                                            @if($reserva->estado_pago === 'Pagado') text-green-600
-                                            @elseif($reserva->estado_pago === 'Pendiente') text-yellow-600
-                                            @elseif($reserva->estado_pago === 'Cancelado') text-red-600
-                                            @else text-gray-600 @endif">
+                                    <span class="font-semibold px-2 py-1 rounded
+                                         @if($reserva->estado_pago === 'Pagado') text-green-600
+                                                @elseif($reserva->estado_pago === 'Cancelado') text-red-600
+                                                @elseif($reserva->estado_pago === 'Pendiente' && $reserva->aviso_pago)
+                                                    text-yellow-600 animate-pulse bg-green-200
+                                                @elseif($reserva->estado_pago === 'Pendiente')
+                                                    text-yellow-600
+                                                @else
+                                                    text-gray-600
+                                                @endif">
                                         {{ $reserva->estado_pago }}
                                     </span>
                                 </td>
@@ -94,15 +100,16 @@
                                 <td class="px-4 py-3 text-center space-x-1">
                                     {{-- Botón Confirmar Pago --}}
                                     @if($reserva->estado_pago === 'Pendiente' && $reserva->aviso_pago)
-                                    <form action="{{ route('reservas.pagoConfirmado', $reserva->id) }}" method="POST" class="inline">
-                                        @csrf
-                                        <button type="submit"
-                                            onclick="return confirm('¿Deseás confirmar el pago de esta reserva?')"
-                                            class="bg-green-600 text-white px-2 py-1 rounded text-xs hover:bg-green-700">
-                                            Confirmar Pago
-                                        </button>
-                                        <span class="ml-2 text-sm text-blue-600">🟢 Aviso de pago recibido</span>
-                                    </form>
+                                    <div class="flex flex-col items-center space-y-1">
+                                        <form action="{{ route('reservas.pagoConfirmado', $reserva->id) }}" method="POST">
+                                            @csrf
+                                            <button type="submit"
+                                                onclick="return confirm('¿Deseás confirmar el pago de esta reserva?')"
+                                                class="bg-green-600 text-white px-2 py-1 m-1 rounded text-xs hover:bg-green-700">
+                                                Confirmar Pago
+                                            </button>
+                                        </form>
+                                    </div>
                                     @endif
 
                                     {{-- Botón Cancelar --}}

@@ -12,14 +12,21 @@ class DashboardController extends Controller
     // muestra la pantalla de bienvenida del backoffice
     public function index()
     {
-         $hoy = Carbon::today();
+        // traemos los datos de las reservas del dia de hoy
+        // para mostrar en el dashboard
+        $hoy = Carbon::today();
 
+        // total de llegadas
         $totalLlegadas = Reserva::whereDate('fecha_ingreso', $hoy)
             ->where('estado_reserva', 'Activa')->count();
 
+        // total de salidas
         $totalSalidas = Reserva::whereDate('fecha_egreso', $hoy)
             ->where('estado_reserva', 'Activa')->count();
-
+            
+        // total de alojados (los que estan alojados hoy)
+        // alojados son los que tienen check_in true y estan en el rango de fechas
+        // de ingreso y egreso de la reserva.
         $totalAlojados = Reserva::where('fecha_ingreso', '<=', $hoy)
             ->where('fecha_egreso', '>=', $hoy)
             ->where('estado_reserva', 'Activa')

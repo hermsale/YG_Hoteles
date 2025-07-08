@@ -23,6 +23,7 @@ class ReservaController extends Controller
         return view('cliente.reservas.index', compact('reservas'));
     }
 
+    // Gestion de Reservas en el Backoffice
     public function indexBackoffice()
     {
         if (!in_array(Auth::user()->rol->nombre_rol, ['Administrador', 'Recepcionista'])) {
@@ -30,7 +31,7 @@ class ReservaController extends Controller
         }
 
         $reservas = Reserva::with(['usuario', 'habitacion.categoria'])
-            ->orderByDesc('fecha_creacion')
+            ->orderByDesc('fecha_ingreso')
             ->get();
 
         return view('backoffice.reservas.index', compact('reservas'));
