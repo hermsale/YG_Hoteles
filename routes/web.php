@@ -34,6 +34,14 @@ Route::get('/dashboard/reservas', [ReservaController::class, 'indexBackoffice'])
 
 Route::post('/reservas/{id}/confirmar-pago', [ReservaController::class, 'pagoConfirmado'])->name('reservas.pagoConfirmado');
 
+// habitaciones CRUD
+Route::get('habitaciones/crear', [HabitacionController::class, 'crear'])->name('habitaciones.crear');
+Route::post('habitaciones', [HabitacionController::class, 'store'])->name('habitaciones.store');
+Route::get('habitaciones/{id}/editar',[HabitacionController::class, 'editar'])->name('habitaciones.editar');
+Route::put('habitaciones/{habitacion}', [HabitacionController::class, 'update'])->name('habitaciones.update');
+Route::delete('habitaciones/{habitacion}', [HabitacionController::class, 'destroy'])->name('habitaciones.destroy');
+
+
 // Cliente
 // ruta hacia cliente habitaciones
 Route::get('/habitaciones', [HabitacionController::class, 'index'])->name('habitaciones.index');

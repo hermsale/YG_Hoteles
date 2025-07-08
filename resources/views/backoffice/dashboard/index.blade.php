@@ -7,12 +7,12 @@
         {{-- 🔻 CABECERA DEL DASHBOARD --}}
         <div class="flex items-center justify-between mb-4">
 
-           
+
 
 
             {{-- 📝 TÍTULO DEL DASHBOARD --}}
             <h2 class="text-xl text-center font-semibold text-gray-800 mt-4">
-                {{ $fechaHoraCapitalizada }}
+                {{ $fechaHoraActualizada }}
             </h2>
             <h2 class="text-xl text-center font-semibold text-gray-800 mt-4">
                 DASHBOARD

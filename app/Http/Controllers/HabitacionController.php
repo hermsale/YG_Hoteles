@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Habitacion;
 use App\Http\Controllers\Controller;
+use App\Models\Amenity;
+use App\Models\Categoria;
 use Illuminate\Http\Request;
 
 class HabitacionController extends Controller
@@ -59,21 +61,25 @@ class HabitacionController extends Controller
                     });
             });
         }
-        
+
         // Obtener todas las habitaciones
         $habitaciones =  $query->with(['imagenes', 'categoria', 'amenities'])->get();
         return view('cliente.habitaciones.disponibilidad', compact('habitaciones')); // Retorna la vista disponibilidad.blade.php
     }
     /**
-     * Show the form for creating a new resource.
+     * funcion para crear una habitacion
      */
-    public function create()
+    public function crear()
     {
-        //
+        $categorias = Categoria::all();
+        $amenities = Amenity::all();
+
+        return view('backoffice.habitaciones.crear', compact('categorias', 'amenities'));
     }
 
+
     /**
-     * Store a newly created resource in storage.
+     * funcion para almacenar una habitacion
      */
     public function store(Request $request)
     {
@@ -89,11 +95,21 @@ class HabitacionController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * funcion para editar una habitacion
      */
-    public function edit(Habitacion $habitacion)
+    public function editar(Habitacion $habitacion)
     {
-        //
+        $habitacion = Habitacion::with(['categoria', 'imagenes', 'amenities'])->findOrFail($habitacion->id);
+        return view('backoffice.habitaciones.editar', compact('habitacion'));
+    }
+
+    public function inhabilitar(Habitacion $habitacion){
+        $habitacion = Habitacion::findOrFail($habitacion->id);
+        // Cambiar el estado de la habitación a inactivo
+        $habitacion->estado = 'Inactivo'; 
+        $habitacion->save();
+
+        return redirect()->route('habitaciones.index')->with('success', 'Habitación inhabilitada correctamente.');
     }
 
     /**

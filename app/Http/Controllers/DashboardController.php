@@ -18,7 +18,7 @@ class DashboardController extends Controller
         // para que se muestre el nombre del dia y del mes en español
         // en la vista del dashboard
         $fechaHora = Carbon::now()->translatedFormat('l d \d\e F \d\e Y - H:i');
-        $fechaHoraCapitalizada = ucwords($fechaHora);
+        $fechaHoraActualizada= ucwords($fechaHora);
 
         // traemos los datos de las reservas del dia de hoy
         // para mostrar en el dashboard
@@ -42,7 +42,7 @@ class DashboardController extends Controller
             ->count();
 
         return view('backoffice.dashboard.index', compact(
-            'totalLlegadas', 'totalSalidas', 'totalAlojados', 'fechaHoraCapitalizada'
+            'totalLlegadas', 'totalSalidas', 'totalAlojados', 'fechaHoraActualizada'
         ));
     }
     // funcion para mostrar todas las imagenes de las habitaciones
