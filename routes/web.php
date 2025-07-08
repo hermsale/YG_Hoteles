@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CalendarioController;
+use App\Http\Controllers\ContactoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HabitacionController;
 use App\Http\Controllers\ImagenController;
@@ -33,10 +34,13 @@ Route::get('/dashboard/reservas', [ReservaController::class, 'indexBackoffice'])
 
 Route::post('/reservas/{id}/confirmar-pago', [ReservaController::class, 'pagoConfirmado'])->name('reservas.pagoConfirmado');
 
+// Cliente
 // ruta hacia cliente habitaciones
 Route::get('/habitaciones', [HabitacionController::class, 'index'])->name('habitaciones.index');
 Route::get('/habitaciones/disponibilidad', [HabitacionController::class, 'disponibilidad'])->name('habitaciones.disponibilidad');
 
+// vista de contacto
+Route::get('/contacto', [ContactoController::class, 'index'])->name('contacto.index');
 
 // ruta hacia cliente fotos
 Route::get('/fotos', [ImagenController::class, 'index'])->name('fotos.index');

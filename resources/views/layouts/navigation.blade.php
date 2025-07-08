@@ -25,7 +25,7 @@
             </a>
             @endif
             @endauth
-            <a href="#" class="text-white hover:underline">Contáctanos</a>
+            <a href="{{ route('contacto.index') }}" class="text-white hover:underline">Contáctanos</a>
 
             @auth
             <!-- Dropdown de usuario -->

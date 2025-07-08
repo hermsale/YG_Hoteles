@@ -1,13 +1,15 @@
 
 <x-app-layout>
     <!-- formulario de reserva -->
-            <x-formulario-reserva />
+            <!-- <x-formulario-reserva /> -->
 
  <!-- cito el componente de navbar -->
-    <x-navbar />
 
-    <!-- Sección de reseñas -->
-    <section class="bg-gray-900 text-white py-16">
+ <!-- Sección de reseñas -->
+ <section class="bg-gray-900 text-white py-24">
+    <div class="bg-gray-900 text-white py-5 my-9">
+        <x-navbar />
+    </div>
     <div class="max-w-xl mx-auto bg-gray-200 text-black rounded shadow-lg p-6">
         <h2 class="text-2xl font-semibold text-center mb-6">Reseña</h2>
 
