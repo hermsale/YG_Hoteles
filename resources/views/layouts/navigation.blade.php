@@ -4,6 +4,33 @@
         <div class="flex items-center gap-3 text-white text-xl font-bold">
             @auth
             @if (in_array(auth()->user()->rol->nombre_rol, ['Administrador','Recepcionista']))
+            {{-- 🟦 ÍCONO DE MENÚ HAMBURGUESA (izquierda del título) --}}
+            {{-- Preparado para en el futuro agregar funcionalidad de menú desplegable --}}
+            {{-- 🔽 MENÚ HAMBURGUESA CON DROPDOWN --}}
+            <x-dropdown align="left" width="48">
+                <x-slot name="trigger">
+                    <button class="inline-flex items-center p-2 text-sm font-medium text-white bg-gray-800 rounded-md hover:text-gray-300 focus:outline-none">
+                        {{-- Ícono hamburguesa --}}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:h-8 md:w-8" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </x-slot>
+
+                <x-slot name="content">
+                    {{-- Ítems del menú --}}
+                    <x-dropdown-link :href="route('habitaciones.index')">
+                        🛏 Habitaciones
+                    </x-dropdown-link>
+
+                    {{-- Podés agregar más entradas si querés --}}
+                    <x-dropdown-link :href="route('reservas.index')">
+                        📋 Reservas
+                    </x-dropdown-link>
+                </x-slot>
+            </x-dropdown>
             <a href="{{ route('dashboard') }}">
                 <img src="{{ asset('img/otros/icon-hotel.png') }}" alt="Logo del hotel"
                     class="w-10 h-10 object-contain">

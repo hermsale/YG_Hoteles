@@ -7,17 +7,14 @@
         {{-- 🔻 CABECERA DEL DASHBOARD --}}
         <div class="flex items-center justify-between mb-4">
 
-            {{-- 🟦 ÍCONO DE MENÚ HAMBURGUESA (izquierda del título) --}}
-            {{-- Preparado para en el futuro agregar funcionalidad de menú desplegable --}}
-            <button class="text-gray-700 hover:text-gray-900 focus:outline-none">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:h-8 md:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-            </button>
+           
+
 
             {{-- 📝 TÍTULO DEL DASHBOARD --}}
-            <h2 class="text-xl font-semibold text-gray-800 mt-4">
+            <h2 class="text-xl text-center font-semibold text-gray-800 mt-4">
+                {{ $fechaHoraCapitalizada }}
+            </h2>
+            <h2 class="text-xl text-center font-semibold text-gray-800 mt-4">
                 DASHBOARD
             </h2>
 
@@ -28,7 +25,7 @@
                 <a href="{{ route('calendario.index') }}" class="text-blue-600 hover:text-blue-800 transition-all duration-200">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M8 7V3M16 7V3M4 11h16M4 19h16M4 15h16M4 7h16a2 2 0 012 2v11a2 2 0 01-2 2H4a2 2 0 01-2-2V9a2 2 0 012-2z" />
+                            d="M8 7V3M16 7V3M4 11h16M4 19h16M4 15h16M4 7h16a2 2 0 012 2v11a2 2 0 01-2 2H4a2 2 0 01-2-2V9a2 2 0 012-2z" />
                     </svg>
                 </a>
 
@@ -69,11 +66,11 @@
 
             {{-- 📋 BLOQUE DE RESERVAS --}}
             {{-- 📋 BLOQUE DE RESERVAS CON LIVEWIRE --}}
-                <div class="bg-white p-4 rounded-xl shadow border">
-                    <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">Reservas</h3>
+            <div class="bg-white p-4 rounded-xl shadow border">
+                <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">Reservas</h3>
 
-                    @livewire('dashboard-reservas')
-                </div>
+                @livewire('dashboard-reservas')
+            </div>
 
 
             {{-- 📊 BLOQUE DE ACTIVIDAD DEL DÍA --}}

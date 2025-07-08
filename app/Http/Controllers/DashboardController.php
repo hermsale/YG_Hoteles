@@ -12,6 +12,14 @@ class DashboardController extends Controller
     // muestra la pantalla de bienvenida del backoffice
     public function index()
     {
+
+        // Configuramos el locale de Carbon para español
+        // Esto permite que las fechas se muestren en español
+        // para que se muestre el nombre del dia y del mes en español
+        // en la vista del dashboard
+        $fechaHora = Carbon::now()->translatedFormat('l d \d\e F \d\e Y - H:i');
+        $fechaHoraCapitalizada = ucwords($fechaHora);
+
         // traemos los datos de las reservas del dia de hoy
         // para mostrar en el dashboard
         $hoy = Carbon::today();
@@ -23,7 +31,7 @@ class DashboardController extends Controller
         // total de salidas
         $totalSalidas = Reserva::whereDate('fecha_egreso', $hoy)
             ->where('estado_reserva', 'Activa')->count();
-            
+
         // total de alojados (los que estan alojados hoy)
         // alojados son los que tienen check_in true y estan en el rango de fechas
         // de ingreso y egreso de la reserva.
@@ -34,7 +42,7 @@ class DashboardController extends Controller
             ->count();
 
         return view('backoffice.dashboard.index', compact(
-            'totalLlegadas', 'totalSalidas', 'totalAlojados'
+            'totalLlegadas', 'totalSalidas', 'totalAlojados', 'fechaHoraCapitalizada'
         ));
     }
     // funcion para mostrar todas las imagenes de las habitaciones
