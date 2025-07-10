@@ -35,40 +35,41 @@ Route::get('/dashboard/reservas', [ReservaController::class, 'indexBackoffice'])
 Route::post('/reservas/{id}/confirmar-pago', [ReservaController::class, 'pagoConfirmado'])->
 middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('reservas.pagoConfirmado');
 
-// habitaciones CRUD
+// habitaciones CRUD - SOLAMENTE ACCESO ADMINISTRADOR
 Route::get('backoffice/habitaciones', [HabitacionController::class, 'indexBackoffice'])->
-middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('backoffice.habitaciones.index');
+middleware(['auth', 'verified', 'rol.admin'])->name('backoffice.habitaciones.index');
 
 // ruta para crear una habitacion
 Route::get('backoffice/habitaciones/crear', [HabitacionController::class, 'crear'])->
-middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('backoffice.habitaciones.crear');
+middleware(['auth', 'verified', 'rol.admin'])->name('backoffice.habitaciones.crear');
 
+// se usa el metodo post para guardar los datos de la habitacion en la bd
 Route::post('backoffice/habitaciones', [HabitacionController::class, 'store'])->
-middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('backoffice.habitaciones.store');
+middleware(['auth', 'verified', 'rol.admin'])->name('backoffice.habitaciones.store');
 
 // HABILITAR habitación (pasar de Inactivo a Activo)
 Route::post('backoffice/habitaciones/{habitacion}/habilitar', [HabitacionController::class, 'habilitar'])->
-middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('backoffice.habitaciones.habilitar');
+middleware(['auth', 'verified', 'rol.admin'])->name('backoffice.habitaciones.habilitar');
 // INHABILITAR habitación (pasar de Activo a Inactivo)
 Route::post('backoffice/habitaciones/{habitacion}/inhabilitar', [HabitacionController::class, 'inhabilitar'])->
-middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('backoffice.habitaciones.inhabilitar');
+middleware(['auth', 'verified', 'rol.admin'])->name('backoffice.habitaciones.inhabilitar');
 
 // ruta para editar una habitacion
 // se usa el metodo get para mostrar el formulario de edicion de la habitacion
 Route::get('backoffice/habitaciones/{id}/editar',[HabitacionController::class, 'editar'])->
-middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('backoffice.habitaciones.editar');
+middleware(['auth', 'verified', 'rol.admin'])->name('backoffice.habitaciones.editar');
 
 // funcion para actualizar una habitacion
 // se usa el metodo put para actualizar los datos de la habitacion
 Route::put('backoffice/habitaciones/{habitacion}/update', [HabitacionController::class, 'update'])->
-middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('backoffice.habitaciones.update');
+middleware(['auth', 'verified', 'rol.admin'])->name('backoffice.habitaciones.update');
 
 // funcion para eliminar una habitacion
 Route::delete('backoffice/habitaciones/{habitacion}/destroy', [HabitacionController::class, 'destroy'])->
 middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('backoffice.habitaciones.destroy');
 // funcion para eliminar una imagen de una habitacion
 Route::delete('backoffice/habitaciones/{id}/imgDestroy', [ImagenController::class, 'destroy'])->
-middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('backoffice.habitaciones.imgDestroy');
+middleware(['auth', 'verified', 'rol.admin'])->name('backoffice.habitaciones.imgDestroy');
 
 
 // Cliente

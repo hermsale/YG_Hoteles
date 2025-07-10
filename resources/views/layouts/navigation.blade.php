@@ -4,8 +4,6 @@
         <div class="flex items-center gap-3 text-white text-xl font-bold">
             @auth
             @if (in_array(auth()->user()->rol->nombre_rol, ['Administrador','Recepcionista']))
-            {{-- 🟦 ÍCONO DE MENÚ HAMBURGUESA (izquierda del título) --}}
-            {{-- Preparado para en el futuro agregar funcionalidad de menú desplegable --}}
             {{-- 🔽 MENÚ HAMBURGUESA CON DROPDOWN --}}
             <x-dropdown align="left" width="48">
                 <x-slot name="trigger">
@@ -21,9 +19,11 @@
 
                 <x-slot name="content">
                     {{-- Ítems del menú --}}
+                    @if (in_array(auth()->user()->rol->nombre_rol, ['Administrador']))
                     <x-dropdown-link :href="route('backoffice.habitaciones.index')">
                         🛏 Habitaciones
                     </x-dropdown-link>
+                    @endif
 
                     {{-- Podés agregar más entradas si querés --}}
                     <x-dropdown-link :href="route('reservas.index')">
@@ -42,6 +42,13 @@
             </a>
             @endif
             @endauth
+            <!-- en caso que haya un usuario no logueado -->
+            @guest
+            <a href="/">
+                <img src="{{ asset('img/otros/icon-hotel.png') }}" alt="Logo del hotel"
+                    class="w-10 h-10 object-contain">
+            </a>
+            @endguest
             <span>YG Hoteles</span>
         </div>
 
@@ -61,6 +68,12 @@
             </a>
             @endif
             @endauth
+
+            @guest
+            <a href="{{ route('reservas.index') }}" class="text-white hover:underline">
+                Mis reservas
+            </a>
+            @endguest
 
             <a href="{{ route('contacto.index') }}" class="text-white hover:underline">Contáctanos</a>
 
