@@ -6,6 +6,8 @@ use App\Models\Habitacion;
 use App\Http\Controllers\Controller;
 use App\Models\Amenity;
 use App\Models\Categoria;
+use App\Models\Imagen;
+use Illuminate\Container\Attributes\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
@@ -91,11 +93,55 @@ class HabitacionController extends Controller
 
 
     /**
-     * funcion para almacenar una habitacion
+     * funcion para almacenar una habitacion en la BD
      */
     public function store(Request $request)
     {
-        //
+        Log::info('Se ingresó al método store.', ['request' => $request->all()]);
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'required|string',
+            'capacidad' => 'required|integer|min:1',
+            'codigo_habitacion' => 'required|string|max:50|unique:habitaciones,codigo_habitacion',
+            'precio_noche' => 'required|numeric|min:0',
+            'id_categoria' => 'required|exists:categorias,id',
+            'amenities' => 'array',
+            'amenities.*' => 'exists:amenities,id',
+            'imagenes' => 'nullable|array',
+            'imagenes.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $habitacion = Habitacion::create($request->only([
+            'nombre',
+            'descripcion',
+            'capacidad',
+            'codigo_habitacion',
+            'precio_noche',
+            'id_categoria',
+        ]));
+
+        if ($request->has('amenities')) {
+            $habitacion->amenities()->sync($request->amenities);
+        }
+
+
+
+        if ($request->hasFile('imagenes')) {
+            foreach ($request->file('imagenes') as $imagen) {
+                $nombreImagen = time() . '_' . $imagen->getClientOriginalName();
+                $rutaDestino = public_path('img/habitaciones');
+
+                // Mover imagen al destino deseado
+                $imagen->move($rutaDestino, $nombreImagen);
+
+                // Guardar en base de datos
+                $habitacion->imagenes()->create([
+                    'url' => 'img/habitaciones/' . $nombreImagen
+                ]);
+            }
+        }
+
+        return redirect()->route('backoffice.habitaciones.index')->with('success', 'Habitación creada correctamente.');
     }
 
     /**
@@ -110,15 +156,15 @@ class HabitacionController extends Controller
      * funcion para editar una habitacion
      */
     public function editar($id)
-{
-    // guardo todo lo que viene del id de la habitacion que se quiere editar
-    $habitacion = Habitacion::with(['imagenes', 'categoria', 'amenities'])->findOrFail($id);
-    // traigo todas las categorias y amenities disponibles
-    $categorias = Categoria::all();
-    $amenities = Amenity::all();
+    {
+        // guardo todo lo que viene del id de la habitacion que se quiere editar
+        $habitacion = Habitacion::with(['imagenes', 'categoria', 'amenities'])->findOrFail($id);
+        // traigo todas las categorias y amenities disponibles
+        $categorias = Categoria::all();
+        $amenities = Amenity::all();
 
-    return view('backoffice.habitaciones.editar', compact('habitacion', 'categorias', 'amenities'));
-}
+        return view('backoffice.habitaciones.editar', compact('habitacion', 'categorias', 'amenities'));
+    }
 
     // funcion para inhabilitar una habitacion
     // se cambia el estado de la habitacion a Inactivo
@@ -159,6 +205,8 @@ class HabitacionController extends Controller
             'categoria_id' => 'required|exists:categorias,id',
             'amenities' => 'array',
             'amenities.*' => 'exists:amenities,id',
+            'imagenes' => 'nullable|array',
+            'imagenes.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         // Actualizar los datos de la habitación
@@ -173,15 +221,49 @@ class HabitacionController extends Controller
         // Sincronizar las amenities
         $habitacion->amenities()->sync($request->amenities);
 
+        if ($request->hasFile('imagenes')) {
+            foreach ($request->file('imagenes') as $imagen) {
+                $nombreImagen = time() . '_' . $imagen->getClientOriginalName();
+                $rutaDestino = public_path('img/habitaciones');
+
+                // Mover imagen al destino deseado
+                $imagen->move($rutaDestino, $nombreImagen);
+
+                // Guardar en base de datos
+                $habitacion->imagenes()->create([
+                    'url' => 'img/habitaciones/' . $nombreImagen
+                ]);
+            }
+        }
+
         return redirect()->route('backoffice.habitaciones.index')
             ->with('success', 'Habitación actualizada correctamente.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * elimina de la base de datos una habitacion
+     * y sus relaciones con amenities e imágenes
      */
     public function destroy(Habitacion $habitacion)
     {
-        //
+        // 1. Eliminar las relaciones con amenities (si usás tabla intermedia habitacion_amenity)
+        $habitacion->amenities()->detach();
+
+        // 2. Eliminar las imágenes asociadas (si usás relación hasMany)
+        foreach ($habitacion->imagenes as $imagen) {
+            // Eliminar el archivo físico si es necesario
+            if (file_exists(public_path($imagen->url))) {
+                unlink(public_path($imagen->url));
+            }
+
+            // Eliminar el registro en la base de datos
+            $imagen->delete();
+        }
+
+        // 3. Eliminar la habitación en sí
+        $habitacion->delete();
+
+        return redirect()->route('backoffice.habitaciones.index')
+            ->with('success', 'Habitación eliminada correctamente.');
     }
 }

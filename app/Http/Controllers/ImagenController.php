@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Imagen;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
 // php artisan make:controller ImagenController --resource
@@ -15,10 +16,10 @@ class ImagenController extends Controller
      */
     public function index()
     {
-           // Obtener todas las imágenes
-    $imagenes = Imagen::all();
-    // Retornar una vista con las imágenes
-    return view('cliente.fotos.index', compact('imagenes'));
+        // Obtener todas las imágenes
+        $imagenes = Imagen::all();
+        // Retornar una vista con las imágenes
+        return view('cliente.fotos.index', compact('imagenes'));
     }
 
     /**
@@ -66,6 +67,22 @@ class ImagenController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        // Buscar la imagen por ID
+        $imagen = Imagen::findOrFail($id);
+        $ruta = public_path($imagen->url);
+
+        Log::info('Eliminando imagen', ['id' => $imagen->id, 'url' => $imagen->url]);
+        // Eliminar archivo del storage
+        if (file_exists($ruta)) {
+            unlink($ruta);
+            Log::info('Imagen eliminada del disco.', ['archivo' => $imagen->url]);
+        } else {
+            Log::warning('El archivo de imagen no existe en disco.', ['archivo' => $imagen->url]);
+        }
+
+        // Eliminar registro de la base
+        $imagen->delete();
+
+        return back()->with('success', 'Imagen eliminada correctamente.');
     }
 }

@@ -24,10 +24,10 @@
                     <label class="block font-semibold mb-1">Categoría</label>
                     <select name="categoria_id" class="w-full border rounded px-3 py-2">
                         @foreach($categorias as $categoria)
-                            <option value="{{ $categoria->id }}"
-                                {{ $habitacion->categoria_id == $categoria->id ? 'selected' : '' }}>
-                                {{ $categoria->nombre }}
-                            </option>
+                        <option value="{{ $categoria->id }}"
+                            {{ $habitacion->categoria_id == $categoria->id ? 'selected' : '' }}>
+                            {{ $categoria->nombre }}
+                        </option>
                         @endforeach
                     </select>
                 </div>
@@ -51,11 +51,11 @@
                     <label class="block font-semibold mb-2">Servicios incluidos</label>
                     <div class="grid grid-cols-2 gap-2">
                         @foreach($amenities as $amenity)
-                            <label class="flex items-center space-x-2">
-                                <input type="checkbox" name="amenities[]" value="{{ $amenity->id }}"
-                                    {{ $habitacion->amenities->contains($amenity->id) ? 'checked' : '' }}>
-                                <span>{{ $amenity->nombre }}</span>
-                            </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" name="amenities[]" value="{{ $amenity->id }}"
+                                {{ $habitacion->amenities->contains($amenity->id) ? 'checked' : '' }}>
+                            <span>{{ $amenity->nombre }}</span>
+                        </label>
                         @endforeach
                     </div>
                 </div>
@@ -65,10 +65,14 @@
                     <label class="block font-semibold mb-1">Imágenes actuales</label>
                     <div class="flex flex-wrap gap-2 mb-2">
                         @foreach($habitacion->imagenes as $imagen)
-                            <div class="relative w-32 h-20">
-                                <img src="{{ asset($imagen->url) }}" class="w-full h-full object-cover rounded">
-                                {{-- Opcional: botón para eliminar imagen --}}
-                            </div>
+                        <div class="relative w-32 h-20">
+                            <img src="{{ asset($imagen->url) }}" class="w-full h-full object-cover rounded">
+                            <button type="button"
+                                onclick="document.getElementById('delete-imagen-{{ $imagen->id }}').submit();"
+                                class="absolute top-1 right-1 bg-red-600 text-white rounded px-1 text-xs">
+                                ✖
+                            </button>
+                        </div>
                         @endforeach
                     </div>
                     <label class="block font-semibold mb-1">Agregar nuevas imágenes</label>
@@ -78,22 +82,34 @@
                 {{-- Botones --}}
                 <div class="flex justify-between mt-6">
                     <a href="{{ route('backoffice.habitaciones.index') }}"
-                        class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">Cancelar</a>
+                        class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">⬅️ Cancelar</a>
 
                     <div class="flex gap-3">
                         <button type="submit"
                             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">💾 Guardar</button>
-
-                        </div>
                     </div>
-                </form>
-                <form action="{{ route('habitaciones.index', $habitacion->id) }}" method="POST"
-                    onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta habitación?')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit"
-                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">🗑️ Eliminar</button>
-                </form>
+
+            </form>
+        </div>
+        <div class="text-center mt-8">
+            <h3 class="text-lg font-semibold mt-8">Eliminar Habitación</h3>
+            <p class="text-red-600 mb-4">Esta acción eliminará la habitación y todas sus imágenes asociadas.</p>
+            <form action="{{ route('backoffice.habitaciones.destroy', $habitacion) }}" method="POST"
+                onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta habitación?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit"
+                    class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">🗑️ Eliminar</button>
+            </form>
+        </div>
+        @foreach($habitacion->imagenes as $imagen)
+        <form id="delete-imagen-{{ $imagen->id }}"
+            action="{{ route('backoffice.habitaciones.imgDestroy', $imagen->id) }}"
+            method="POST" style="display: none;">
+            @csrf
+            @method('DELETE')
+        </form>
+        @endforeach
         </div>
     </section>
 </x-app-layout>

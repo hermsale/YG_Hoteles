@@ -36,7 +36,10 @@ Route::post('/reservas/{id}/confirmar-pago', [ReservaController::class, 'pagoCon
 
 // habitaciones CRUD
 Route::get('backoffice/habitaciones', [HabitacionController::class, 'indexBackoffice'])->name('backoffice.habitaciones.index');
+
+// ruta para crear una habitacion
 Route::get('backoffice/habitaciones/crear', [HabitacionController::class, 'crear'])->name('backoffice.habitaciones.crear');
+
 Route::post('backoffice/habitaciones', [HabitacionController::class, 'store'])->name('backoffice.habitaciones.store');
 
 // HABILITAR habitación (pasar de Inactivo a Activo)
@@ -52,7 +55,10 @@ Route::get('backoffice/habitaciones/{id}/editar',[HabitacionController::class, '
 // se usa el metodo put para actualizar los datos de la habitacion
 Route::put('backoffice/habitaciones/{habitacion}/update', [HabitacionController::class, 'update'])->name('backoffice.habitaciones.update');
 
-Route::delete('backoffice/habitaciones/{habitacion}', [HabitacionController::class, 'destroy'])->name('habitaciones.destroy');
+// funcion para eliminar una habitacion
+Route::delete('backoffice/habitaciones/{habitacion}/destroy', [HabitacionController::class, 'destroy'])->name('backoffice.habitaciones.destroy');
+// funcion para eliminar una imagen de una habitacion
+Route::delete('backoffice/habitaciones/{id}/imgDestroy', [ImagenController::class, 'destroy'])->name('backoffice.habitaciones.imgDestroy');
 
 
 // Cliente
