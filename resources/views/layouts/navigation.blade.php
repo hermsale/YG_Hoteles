@@ -21,7 +21,7 @@
 
                 <x-slot name="content">
                     {{-- Ítems del menú --}}
-                    <x-dropdown-link :href="route('habitaciones.index')">
+                    <x-dropdown-link :href="route('backoffice.habitaciones.index')">
                         🛏 Habitaciones
                     </x-dropdown-link>
 

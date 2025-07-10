@@ -35,11 +35,24 @@ Route::get('/dashboard/reservas', [ReservaController::class, 'indexBackoffice'])
 Route::post('/reservas/{id}/confirmar-pago', [ReservaController::class, 'pagoConfirmado'])->name('reservas.pagoConfirmado');
 
 // habitaciones CRUD
-Route::get('habitaciones/crear', [HabitacionController::class, 'crear'])->name('habitaciones.crear');
-Route::post('habitaciones', [HabitacionController::class, 'store'])->name('habitaciones.store');
-Route::get('habitaciones/{id}/editar',[HabitacionController::class, 'editar'])->name('habitaciones.editar');
-Route::put('habitaciones/{habitacion}', [HabitacionController::class, 'update'])->name('habitaciones.update');
-Route::delete('habitaciones/{habitacion}', [HabitacionController::class, 'destroy'])->name('habitaciones.destroy');
+Route::get('backoffice/habitaciones', [HabitacionController::class, 'indexBackoffice'])->name('backoffice.habitaciones.index');
+Route::get('backoffice/habitaciones/crear', [HabitacionController::class, 'crear'])->name('backoffice.habitaciones.crear');
+Route::post('backoffice/habitaciones', [HabitacionController::class, 'store'])->name('backoffice.habitaciones.store');
+
+// HABILITAR habitación (pasar de Inactivo a Activo)
+Route::post('backoffice/habitaciones/{habitacion}/habilitar', [HabitacionController::class, 'habilitar'])->name('backoffice.habitaciones.habilitar');
+// INHABILITAR habitación (pasar de Activo a Inactivo)
+Route::post('backoffice/habitaciones/{habitacion}/inhabilitar', [HabitacionController::class, 'inhabilitar'])->name('backoffice.habitaciones.inhabilitar');
+
+// ruta para editar una habitacion
+// se usa el metodo get para mostrar el formulario de edicion de la habitacion
+Route::get('backoffice/habitaciones/{id}/editar',[HabitacionController::class, 'editar'])->name('backoffice.habitaciones.editar');
+
+// funcion para actualizar una habitacion
+// se usa el metodo put para actualizar los datos de la habitacion
+Route::put('backoffice/habitaciones/{habitacion}/update', [HabitacionController::class, 'update'])->name('backoffice.habitaciones.update');
+
+Route::delete('backoffice/habitaciones/{habitacion}', [HabitacionController::class, 'destroy'])->name('habitaciones.destroy');
 
 
 // Cliente

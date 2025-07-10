@@ -6,6 +6,7 @@ use App\Models\Habitacion;
 use App\Http\Controllers\Controller;
 use App\Models\Amenity;
 use App\Models\Categoria;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
 class HabitacionController extends Controller
@@ -20,6 +21,13 @@ class HabitacionController extends Controller
         $habitaciones = Habitacion::All();
         return view('cliente.habitaciones.index',  compact('habitaciones')); // Retorna la vista habitaciones.blade.php
         //
+    }
+
+    public function indexBackoffice(Request $request)
+    {
+        // Obtener todas las habitaciones
+        $habitaciones = Habitacion::with(['imagenes', 'categoria', 'amenities'])->get();
+        return view('backoffice.habitaciones.index', compact('habitaciones')); // Retorna la vista habitaciones.blade.php
     }
 
     // funcion para verificar la disponibilidad de habitaciones
@@ -40,6 +48,10 @@ class HabitacionController extends Controller
 
 
         $query = Habitacion::query();
+
+        // query para filtrar habitaciones activas
+        // solo se muestran las habitaciones que están activas
+        $query->where('estado', 'Activo');
         // query para verificar disponibilidad segun capacidad de huespedes
         if ($request->filled('huespedes')) {
             $query->where('capacidad', '>=', (int) $request->huespedes);
@@ -97,19 +109,38 @@ class HabitacionController extends Controller
     /**
      * funcion para editar una habitacion
      */
-    public function editar(Habitacion $habitacion)
-    {
-        $habitacion = Habitacion::with(['categoria', 'imagenes', 'amenities'])->findOrFail($habitacion->id);
-        return view('backoffice.habitaciones.editar', compact('habitacion'));
-    }
+    public function editar($id)
+{
+    // guardo todo lo que viene del id de la habitacion que se quiere editar
+    $habitacion = Habitacion::with(['imagenes', 'categoria', 'amenities'])->findOrFail($id);
+    // traigo todas las categorias y amenities disponibles
+    $categorias = Categoria::all();
+    $amenities = Amenity::all();
 
-    public function inhabilitar(Habitacion $habitacion){
-        $habitacion = Habitacion::findOrFail($habitacion->id);
-        // Cambiar el estado de la habitación a inactivo
-        $habitacion->estado = 'Inactivo'; 
+    return view('backoffice.habitaciones.editar', compact('habitacion', 'categorias', 'amenities'));
+}
+
+    // funcion para inhabilitar una habitacion
+    // se cambia el estado de la habitacion a Inactivo
+    public function inhabilitar(Habitacion $habitacion)
+    {
+        $habitacion->estado = 'Inactivo';
         $habitacion->save();
 
-        return redirect()->route('habitaciones.index')->with('success', 'Habitación inhabilitada correctamente.');
+        return redirect()->route('backoffice.habitaciones.index')
+            ->with('success', 'Habitación inhabilitada correctamente.');
+    }
+
+    // funcion para habilitar una habitacion
+    // se cambia el estado de la habitacion a Activo
+    public function habilitar(Habitacion $habitacion)
+    {
+
+        $habitacion->estado = 'Activo';
+        $habitacion->save();
+
+        return redirect()->route('backoffice.habitaciones.index')
+            ->with('success', 'Habitación habilitada correctamente.');
     }
 
     /**
@@ -117,7 +148,33 @@ class HabitacionController extends Controller
      */
     public function update(Request $request, Habitacion $habitacion)
     {
-        //
+        Log::info('Se ingresó al método update.', ['id' => $habitacion->id]);
+        Log::info('request ', $request->all());
+        // Validar los datos de la solicitud
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'required|string',
+            'capacidad' => 'required|integer|min:1',
+            'precio_noche' => 'required|numeric|min:0',
+            'categoria_id' => 'required|exists:categorias,id',
+            'amenities' => 'array',
+            'amenities.*' => 'exists:amenities,id',
+        ]);
+
+        // Actualizar los datos de la habitación
+        $habitacion->update($request->only([
+            'nombre',
+            'descripcion',
+            'capacidad',
+            'precio_noche',
+            'categoria_id',
+        ]));
+
+        // Sincronizar las amenities
+        $habitacion->amenities()->sync($request->amenities);
+
+        return redirect()->route('backoffice.habitaciones.index')
+            ->with('success', 'Habitación actualizada correctamente.');
     }
 
     /**
