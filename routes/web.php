@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 
 use App\Http\Controllers\ResenaController;
 use App\Http\Controllers\ReservaController;
+use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -18,14 +19,11 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
-// // definimos la ruta de acceso '/cursos' y por medio de un array accedemos al CursoController y le indicamos el metodo a ejecutar
-
-
-
 // backoffice
 // definimos la ruta de acceso '/dashboard' y por medio de un array accedemos al DashboardController y le indicamos el metodo a ejecutar
 Route::get('/dashboard', [DashboardController::class,'index']) // por buenas practicas el encarpetado va asi, dentro de backoffice
 ->middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('dashboard');
+
 Route::get('/calendario', [CalendarioController::class, 'index'])->
 middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('calendario.index');
 
@@ -35,7 +33,7 @@ Route::get('/dashboard/reservas', [ReservaController::class, 'indexBackoffice'])
 Route::post('/reservas/{id}/confirmar-pago', [ReservaController::class, 'pagoConfirmado'])->
 middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('reservas.pagoConfirmado');
 
-// habitaciones CRUD - SOLAMENTE ACCESO ADMINISTRADOR
+// habitaciones CRUD - SOLAMENTE ACCESO ADMINISTRADOR ///////////////////////////////////////////////////////////////
 Route::get('backoffice/habitaciones', [HabitacionController::class, 'indexBackoffice'])->
 middleware(['auth', 'verified', 'rol.admin'])->name('backoffice.habitaciones.index');
 
@@ -71,6 +69,15 @@ middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('backoffice.hab
 Route::delete('backoffice/habitaciones/{id}/imgDestroy', [ImagenController::class, 'destroy'])->
 middleware(['auth', 'verified', 'rol.admin'])->name('backoffice.habitaciones.imgDestroy');
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// CRUD  de usuarios - solo visto para administradores
+Route::middleware(['auth','verified', 'rol.admin'])->group(function () {
+    Route::get('backoffice/usuarios', [UsuarioController::class, 'index'])->name('backoffice.usuarios.index');
+    Route::get('backoffice/usuarios/crear', [UsuarioController::class, 'crearUsuario'])->name('backoffice.usuarios.crear');
+    Route::post('backoffice/usuarios', [UsuarioController::class, 'store'])->name('backoffice.usuarios.store');
+    Route::post('backoffice/usuarios/{usuario}/resetear-clave', [UsuarioController::class, 'resetearClave'])->name('backoffice.usuarios.resetearClave');
+    Route::delete('backoffice/usuarios/{id}/destroy', [UsuarioController::class, 'destroy'])->name('backoffice.usuarios.destroy');
+});
 
 // Cliente
 // ruta hacia cliente habitaciones

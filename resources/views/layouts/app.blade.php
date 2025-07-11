@@ -17,13 +17,13 @@
 </head>
 
 <body class="bg-blue-400 text-white font-sans antialiased">
-    <div class="min-h-screen bg-gray-100">
+    <div class="min-h-screen bg-gray-200">
         <!-- esto corresponde a la barra de navegacion -->
         @include('layouts.navigation')
 
         <!-- Esto es lo que carga el titulo header-->
         @isset($header)
-        <header class="bg-orange-200 shadow">
+        <header class="bg-gray-600 shadow">
             <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                 {{ $header }}
             </div>

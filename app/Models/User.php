@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var list<string>
      */
 
-     /**
+    /**
      * Valores por defecto para los atributos del modelo.
      */
     protected $attributes = [
@@ -36,6 +36,11 @@ class User extends Authenticatable
         'id_rol'
     ];
 
+
+    public function reservas()
+    {
+        return $this->hasMany(Reserva::class, 'id_usuario');
+    }
 
     // un usuario puede tener solo 1 rol
     public function rol()
@@ -59,7 +64,7 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    
+
     /**
      * Get the attributes that should be cast.
      *

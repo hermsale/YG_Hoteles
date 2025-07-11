@@ -2,30 +2,50 @@
     <section class="relative h-screen bg-cover bg-center" style="background-image: url('{{ asset('img/otros/fondo-inicio.png') }}');">
         <div class="absolute inset-0 bg-black bg-opacity-50"></div>
         <div class="relative z-10 flex justify-center items-center h-full">
-            <div class="bg-white rounded-2xl shadow-lg p-10 w-full max-w-3xl">
+            <div class="bg-white rounded-2xl shadow-lg p-10 w-full max-w-3xl" x-data="{ show: false }">
                 <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Contáctanos</h2>
 
-                <form action="" method="POST" class="space-y-5">
+                <form @submit.prevent="
+                        if ($event.target.checkValidity()) {
+                            show = true;
+                            setTimeout(() => show = false, 4000);
+                            $event.target.reset();
+                        }
+                    " class="space-y-5">
+
                     @csrf
 
                     <div>
                         <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre completo</label>
-                        <input type="text" name="nombre" id="nombre" required class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        <input type="text" name="nombre" id="nombre" required class="mt-1 block w-full border text-black border-gray-300 rounded-lg shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500">
                     </div>
 
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
-                        <input type="email" name="email" id="email" required class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        <input type="email" name="email" id="email" required class="mt-1 block w-full border text-black border-gray-300 rounded-lg shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500">
                     </div>
 
                     <div>
                         <label for="mensaje" class="block text-sm font-medium text-gray-700">Mensaje</label>
-                        <textarea name="mensaje" id="mensaje" rows="5" required class="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                        <textarea name="mensaje" id="mensaje" rows="5" required class="mt-1 block w-full border text-black border-gray-300 rounded-lg shadow-sm p-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
                     </div>
 
                     <div class="flex justify-center">
-                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-xl transition">Enviar mensaje</button>
+                        <button type="submit"
+                            class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-xl transition">
+                            Enviar mensaje
+                        </button>
                     </div>
+
+                    <!-- Cartel de éxito -->
+                    <div x-show="show" x-transition x-cloak
+                        class="mt-6 mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg shadow-sm text-center"
+                        role="alert">
+                        <strong class="font-bold">✔️ ¡Éxito!</strong>
+                        <span class="ml-2">Tu mensaje ha sido enviado con éxito.</span>
+                    </div>
+
+
                     <div class="text-center mt-8">
                         <p class="text-sm text-gray-600 mb-2">Seguinos en nuestras redes:</p>
                         <div class="flex justify-center space-x-6">
@@ -46,10 +66,14 @@
                             </a>
                         </div>
                     </div>
-
                 </form>
             </div>
         </div>
     </section>
 
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
 </x-app-layout>

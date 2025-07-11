@@ -23,6 +23,9 @@
                     <x-dropdown-link :href="route('backoffice.habitaciones.index')">
                         🛏 Habitaciones
                     </x-dropdown-link>
+                    <x-dropdown-link :href="route('backoffice.usuarios.index')">
+                        👥 Usuarios
+                    </x-dropdown-link>
                     @endif
 
                     {{-- Podés agregar más entradas si querés --}}
