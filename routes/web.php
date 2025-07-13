@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResenaController;
 use App\Http\Controllers\ReservaController;
 use App\Http\Controllers\UsuarioController;
+use App\Models\Habitacion;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -78,6 +79,9 @@ Route::middleware(['auth','verified', 'rol.admin'])->group(function () {
     Route::post('backoffice/usuarios/{usuario}/resetear-clave', [UsuarioController::class, 'resetearClave'])->name('backoffice.usuarios.resetearClave');
     Route::delete('backoffice/usuarios/{id}/destroy', [UsuarioController::class, 'destroy'])->name('backoffice.usuarios.destroy');
 });
+
+// ruta para crear una reserva desde el backoffice
+Route::get('backoffice/reservas/crear', [ReservaController::class, 'reservaBackoffice'])->middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('backoffice.reservas.crear');
 
 // Cliente
 // ruta hacia cliente habitaciones

@@ -1,29 +1,7 @@
 <!-- app-layout es el navbar  -->
 <x-app-layout>
 
-
-<section class="relative h-screen bg-cover bg-center"
-    style="background-image: url('{{ asset('img/otros/fondo-inicio.png') }}');">
-    <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-    <div class="relative z-10 flex justify-center items-center h-full">
-        <div class="bg-white text-black p-6 rounded shadow-lg w-80">
-            <h2 class="text-lg font-semibold mb-4">Reserva Online</h2>
-
-            {{-- errores de validación de Livewire --}}
-            @if ($errors->any())
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
-                    <ul class="text-sm">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-            {{-- componente Livewire dentro del diseño original --}}
-            @livewire('formulario-reserva')
-        </div>
-    </div>
-</section>
+    <x-formulario-reserva />
 
     <!-- cito el componente de navbar -->
     <x-navbar />

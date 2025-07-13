@@ -25,6 +25,7 @@ class HabitacionController extends Controller
         //
     }
 
+    // utilizado en el crud de habitaciones
     public function indexBackoffice(Request $request)
     {
         // Obtener todas las habitaciones

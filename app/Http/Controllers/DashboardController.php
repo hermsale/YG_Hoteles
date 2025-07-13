@@ -45,10 +45,5 @@ class DashboardController extends Controller
             'totalLlegadas', 'totalSalidas', 'totalAlojados', 'fechaHoraActualizada'
         ));
     }
-    // funcion para mostrar todas las imagenes de las habitaciones
-    public function listaImgHabitacion()
-    {
-        $imagenes = Imagen::all(); // Obtiene todas las imágenes
-        return view('backoffice.dashboard.index', compact('imagenes')); // Pasa las imágenes a la vista dashboard.blade.php
-    }
+   
 }
