@@ -158,7 +158,27 @@ class ReservaController extends Controller
 
         // Cambiar el estado de la reserva a cancelada
         $reserva->estado_reserva = 'Cancelada';
-        $reserva->estado_pago = 'Cancelado';
+
+        $reserva->save();
+
+        return back()->with('success', 'Reserva cancelada correctamente.');
+    }
+
+     public function cancelarReservaBackoffice(string $id)
+    {
+        Log::info('Se ejecutó cancelar reserva backoffice ' . $id);
+        $reserva = Reserva::findOrFail( $id);
+
+        Log::info('Reserva encontrada: ', ['id' => $reserva->id]);
+        // Log::info('ID ',$reserva->id);
+        // Verificar si la reserva está en un estado que permite cancelación
+        if ($reserva->estado_reserva !== 'Activa') {
+            return back()->with('error', 'No se puede cancelar una reserva que no está activa.');
+        }
+
+        // Cambiar el estado de la reserva a cancelada
+        $reserva->estado_reserva = 'Cancelada';
+
         $reserva->save();
 
         return back()->with('success', 'Reserva cancelada correctamente.');
