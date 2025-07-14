@@ -14,6 +14,8 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- necesario para que funcione livewire -->
      @livewireStyles
 </head>
 
@@ -84,6 +86,7 @@
         </div>
     </footer>
 
+     <!-- necesario para que funcione livewire -->
     @livewireScripts
 </body>
 
