@@ -11,7 +11,8 @@ use Livewire\Attributes\On;
 class ListadoHabitaciones extends Component
 {
     public $habitaciones = [];
-
+    public $fechaEntrada;
+    public $fechaSalida;
     // nueva manera de importar atributos en Livewire
     #[On('buscarHabitaciones')]
 
@@ -22,6 +23,11 @@ class ListadoHabitaciones extends Component
     {
         Log::info("ListadoHabitaciones component initialized");
         Log::info('Filtros de búsqueda:', $filtros);
+
+        // Asignar las fechas de entrada y salida a las propiedades del componente
+        // para que puedan ser utilizadas en la vista o en otros métodos
+        $this->fechaEntrada = $filtros['fecha_entrada'];
+        $this->fechaSalida = $filtros['fecha_salida'];
 
         $this->habitaciones = Habitacion::with(['imagenes', 'amenities', 'categoria'])
             ->where('capacidad', '>=', $filtros['huespedes'])

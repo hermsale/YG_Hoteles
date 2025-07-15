@@ -44,6 +44,20 @@
                                     <span class="text-gray-500 italic">💰 Total</span>
                                     <p class="font-medium">${{ number_format($reserva->precio_final, 2, ',', '.') }} ARS</p>
                                 </div>
+                                @if ($reserva->promocion)
+                                @php
+                                $precioOriginal = $reserva->precio_final / (1 - $reserva->promocion->descuento_porcentaje / 100);
+                                @endphp
+                                <div class="col-span-2 bg-blue-50 text-blue-800 p-3 rounded-lg shadow mt-2">
+                                    <p><strong>💸 Precio sin descuento:</strong> ${{ number_format($precioOriginal, 2, ',', '.') }} ARS</p>
+                                    <p><strong>🎁 Promoción aplicada:</strong> {{ $reserva->promocion->nombre }} ({{ $reserva->promocion->descuento_porcentaje }}%)</p>
+                                    <p><strong>✅ Total a pagar con descuento:</strong> ${{ number_format($reserva->precio_final, 2, ',', '.') }} ARS</p>
+                                </div>
+                                @else
+                                <div class="col-span-2 text-gray-600 mt-2">
+                                    <p><strong>💳 Total a pagar:</strong> ${{ number_format($reserva->precio_final, 2, ',', '.') }} ARS</p>
+                                </div>
+                                @endif
                                 <div>
                                     <span class="text-gray-500 italic">📌 Estado de Reserva</span>
                                     <p class="font-medium">{{ $reserva->estado_reserva }}</p>

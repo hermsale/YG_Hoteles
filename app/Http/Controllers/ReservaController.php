@@ -164,13 +164,13 @@ class ReservaController extends Controller
         return back()->with('success', 'Reserva cancelada correctamente.');
     }
 
+    // cancelo una reserva desde el backoffice . esta cancelacion no necesita que el usuario logueado sea el dueño de la reserva
      public function cancelarReservaBackoffice(string $id)
     {
-        Log::info('Se ejecutó cancelar reserva backoffice ' . $id);
+        Log::info('Se ejecutó cancelar reserva backoffice ');
         $reserva = Reserva::findOrFail( $id);
 
-        Log::info('Reserva encontrada: ', ['id' => $reserva->id]);
-        // Log::info('ID ',$reserva->id);
+
         // Verificar si la reserva está en un estado que permite cancelación
         if ($reserva->estado_reserva !== 'Activa') {
             return back()->with('error', 'No se puede cancelar una reserva que no está activa.');
@@ -191,6 +191,7 @@ class ReservaController extends Controller
     {
         $reserva = Reserva::with(['habitacion.categoria', 'habitacion.imagenes'])->findOrFail($id);
 
+        // Cargar la promoción asociada
         // parseo las fechas de ingreso y egreso
         $fechaIngreso = \Carbon\Carbon::parse($reserva->fecha_ingreso);
         $fechaEgreso = \Carbon\Carbon::parse($reserva->fecha_egreso);

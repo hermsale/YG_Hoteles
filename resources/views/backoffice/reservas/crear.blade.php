@@ -7,6 +7,8 @@
         {{-- Listado de habitaciones más amplio --}}
         <div class="max-w-6xl mx-auto mt-12 px-4">
            @livewire('listado-habitaciones')
+           @livewire('confirmar-reserva-modal')
+
         </div>
     </section>
 </x-app-layout>

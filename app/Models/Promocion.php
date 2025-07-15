@@ -15,6 +15,7 @@ class Promocion extends Model
 
     // Campos que pueden ser asignados masivamente
     protected $fillable = [
+        'id',
         'nombre',
         'descripcion',
         'descuento_porcentaje',

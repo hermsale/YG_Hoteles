@@ -13,7 +13,7 @@
                 </ul>
             </div>
             @endif
-            <form method="GET" action="{{ route('habitaciones.disponibilidad') }}" id="formulario-filtro">
+            <form onsubmit="scrollToHabitacionesDisponibles()" method="GET" action="{{ route('habitaciones.disponibilidad') }}" id="formulario-filtro">
                 <label class="block text-sm">Fecha de entrada</label>
                 <input type="date" name="fecha_entrada" class="w-full border rounded p-1 mb-3" value="{{ request('fecha_entrada') ?? now()->toDateString() }}">
 

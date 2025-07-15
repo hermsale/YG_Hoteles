@@ -82,6 +82,7 @@ Route::middleware(['auth','verified', 'rol.admin'])->group(function () {
 
 // ruta para crear una reserva desde el backoffice
 Route::get('backoffice/reservas/crear', [ReservaController::class, 'reservaBackoffice'])->middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('backoffice.reservas.crear');
+// ruta para cancelar una reserva desde el backoffice
 Route::post('dashboard/reservas/{id}/cancelar', [ReservaController::class, 'cancelarReservaBackoffice'])->middleware('auth','verified','rol.AdminRecepcionista')->name('backoffice.reservas.cancelarReserva');
 
 
