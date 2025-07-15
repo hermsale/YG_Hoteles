@@ -91,66 +91,82 @@ class ConfirmarReservaModal extends Component
     }
 
 
-public function confirmarReserva()
-{
-    try {
-        // Validación manual (opcional si ya validaste antes)
-        $validator = Validator::make([
-            'fechaEntrada' => $this->fechaEntrada,
-            'fechaSalida' => $this->fechaSalida,
-            'importeTotal' => $this->importeTotal,
-            'codigo_habitacion' => $this->codigo_habitacion,
-        ], [
-            'fechaEntrada' => 'required|date',
-            'fechaSalida' => 'required|date|after:fechaEntrada',
-            'importeTotal' => 'required|numeric|min:0',
-            'codigo_habitacion' => 'required|string',
-        ]);
+    public function confirmarReserva()
+    {
+        try {
+            // Validación manual (opcional si ya validaste antes)
+            $validator = Validator::make([
+                'fechaEntrada' => $this->fechaEntrada,
+                'fechaSalida' => $this->fechaSalida,
+                'importeTotal' => $this->importeTotal,
+                'codigo_habitacion' => $this->codigo_habitacion,
+            ], [
+                'fechaEntrada' => 'required|date',
+                'fechaSalida' => 'required|date|after:fechaEntrada',
+                'importeTotal' => 'required|numeric|min:0',
+                'codigo_habitacion' => 'required|string',
+            ]);
 
-        if ($validator->fails()) {
-            $this->addError('validacion', 'Datos inválidos en la reserva.');
-            return;
+            if ($validator->fails()) {
+                $this->addError('validacion', 'Datos inválidos en la reserva.');
+                return;
+            }
+
+            // Verificar autenticación
+            if (!Auth::check()) {
+                session()->flash('error', 'Debés iniciar sesión para confirmar la reserva.');
+                return redirect()->route('login');
+            }
+
+            // Buscar la habitación por código
+            $habitacion = Habitacion::where('codigo_habitacion', $this->codigo_habitacion)->first();
+            if (!$habitacion) {
+                $this->addError('habitacion', 'No se encontró la habitación seleccionada.');
+                return;
+            }
+
+            // si no se asigno ninguna promoción, se asigna null
+            if (empty($this->promocionSeleccionada)) {
+                // Sin promoción
+                $this->idPromo = null;
+                $this->descuento = 0;
+                $this->importeTotal = $this->cantidadNoches * $this->precioNoche;
+            } else {
+                // Buscar promoción en la colección y aplicar descuento
+                $promo = collect($this->promociones)->firstWhere('id', $this->promocionSeleccionada);
+
+                if ($promo) {
+                    $this->idPromo = $promo->id;
+                    $this->descuento = $promo->descuento_porcentaje;
+                    $this->importeTotal = $this->cantidadNoches * $this->precioNoche * (1 - $this->descuento / 100);
+                }
+            }
+
+            // Crear la reserva
+            $reserva = new Reserva();
+            $reserva->id_usuario = Auth::id();
+            $reserva->id_habitacion = $habitacion->id;
+            $reserva->fecha_ingreso = $this->fechaEntrada;
+            $reserva->fecha_egreso = $this->fechaSalida;
+            $reserva->precio_final = $this->importeTotal;
+            $reserva->estado_reserva = 'Activa';
+            $reserva->estado_pago = 'Pagado';
+            $reserva->id_promocion = $this->idPromo; // Asignar promoción si se seleccionó
+            $reserva->aviso_pago = false;
+            $reserva->fecha_creacion = now();
+            $reserva->save();
+
+            // Opcional: cerrar el modal
+            $this->mostrarModal = false;
+
+            // Redirigir con mensaje
+            session()->flash('success', 'Reserva confirmada correctamente.');
+            return redirect()->route('reservas.index');
+        } catch (\Exception $e) {
+            Log::error('Error al confirmar reserva: ' . $e->getMessage());
+            session()->flash('error', 'Ocurrió un error al confirmar la reserva.');
         }
-
-        // Verificar autenticación
-        if (!Auth::check()) {
-            session()->flash('error', 'Debés iniciar sesión para confirmar la reserva.');
-            return redirect()->route('login');
-        }
-
-        // Buscar la habitación por código
-        $habitacion = Habitacion::where('codigo_habitacion', $this->codigo_habitacion)->first();
-        if (!$habitacion) {
-            $this->addError('habitacion', 'No se encontró la habitación seleccionada.');
-            return;
-        }
-
-        // Crear la reserva
-        $reserva = new Reserva();
-        $reserva->id_usuario = Auth::id();
-        $reserva->id_habitacion = $habitacion->id;
-        $reserva->fecha_ingreso = $this->fechaEntrada;
-        $reserva->fecha_egreso = $this->fechaSalida;
-        $reserva->precio_final = $this->importeTotal;
-        $reserva->estado_reserva = 'Activa';
-        $reserva->estado_pago = 'Pagado';
-        $reserva->id_promocion = $this->promocionSeleccionada; // Asignar promoción si se seleccionó
-        $reserva->aviso_pago = false;
-        $reserva->fecha_creacion = now();
-        $reserva->save();
-
-        // Opcional: cerrar el modal
-        $this->mostrarModal = false;
-
-        // Redirigir con mensaje
-        session()->flash('success', 'Reserva confirmada correctamente.');
-        return redirect()->route('reservas.index');
-
-    } catch (\Exception $e) {
-        Log::error('Error al confirmar reserva: ' . $e->getMessage());
-        session()->flash('error', 'Ocurrió un error al confirmar la reserva.');
     }
-}
 
     public function cerrarModal()
     {
