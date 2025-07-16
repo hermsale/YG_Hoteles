@@ -37,6 +37,11 @@ class User extends Authenticatable
     ];
 
 
+    public function reservas()
+    {
+        return $this->hasMany(Reserva::class, 'id_usuario');
+    }
+
     // un usuario puede tener solo 1 rol
     public function rol()
     {
