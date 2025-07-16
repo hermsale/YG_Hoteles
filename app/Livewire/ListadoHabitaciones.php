@@ -30,16 +30,14 @@ class ListadoHabitaciones extends Component
         $this->fechaSalida = $filtros['fecha_salida'];
 
         $this->habitaciones = Habitacion::with(['imagenes', 'amenities', 'categoria'])
-            ->where('capacidad', '>=', $filtros['huespedes'])
+            ->where('estado', 'Activo') // ✅ solo habitaciones activas
+            ->where('capacidad', '>=', $filtros['huespedes']) // ✅ capacidad mínima
             ->whereDoesntHave('reservas', function ($q) use ($filtros) {
-                $q->where(function ($q2) use ($filtros) {
-                    $q2->whereBetween('fecha_ingreso', [$filtros['fecha_entrada'], $filtros['fecha_salida']])
-                       ->orWhereBetween('fecha_egreso', [$filtros['fecha_entrada'], $filtros['fecha_salida']])
-                       ->orWhere(function ($q3) use ($filtros) {
-                           $q3->where('fecha_ingreso', '<', $filtros['fecha_entrada'])
-                              ->where('fecha_egreso', '>', $filtros['fecha_salida']);
-                       });
-                });
+                $q->where('estado_reserva', 'Activa') // ✅ solo reservas activas
+                  ->where(function ($query) use ($filtros) {
+                      $query->where('fecha_egreso', '>', $filtros['fecha_entrada'])
+                            ->where('fecha_ingreso', '<', $filtros['fecha_salida']);
+                  });
             })
             ->get();
     }
