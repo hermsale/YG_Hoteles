@@ -8,7 +8,7 @@ class CreateCustomEnums extends Migration
     public function up()
     {
 
-        // agrego a la migracion los enum correspondientes al estado de la habitacion 
+        // agrego a la migracion los enum correspondientes al estado de la habitacion
         DB::statement("
             DO \$\$ BEGIN
                 IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'estado_habitacion_enum') THEN
@@ -28,7 +28,7 @@ class CreateCustomEnums extends Migration
         DB::statement("
             DO $$ BEGIN
                 IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'estado_reserva_enum') THEN
-                    CREATE TYPE estado_reserva_enum AS ENUM ('Activa', 'Finalizada', 'Cancelada');
+                    CREATE TYPE estado_reserva_enum AS ENUM ('Activa', 'Pendiente', 'Finalizada', 'Cancelada');
                 END IF;
             END $$;
         ");

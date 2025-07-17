@@ -5,9 +5,15 @@
                 <div class="bg-white rounded-2xl shadow-xl p-8">
 
                     {{-- Encabezado --}}
-                    <h2 class="text-2xl font-bold text-gray-800 mb-6">
-                        🛏️ Detalles de tu Reserva
+                    <h2 class="text-xl font-bold mb-4 text-gray-800">
+                        Detalle de tu reserva
+                        @if(auth()->check() && in_array(auth()->user()->rol->nombre_rol, ['Administrador', 'Recepcionista']))
+                        <span class="text-sm font-normal text-gray-600 ml-4">
+                            Cliente: {{ $reserva->usuario->name ?? 'N/A' }}
+                        </span>
+                        @endif
                     </h2>
+
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
@@ -60,7 +66,13 @@
                                 @endif
                                 <div>
                                     <span class="text-gray-500 italic">📌 Estado de Reserva</span>
-                                    <p class="font-medium">{{ $reserva->estado_reserva }}</p>
+                                    <p class="font-semibold
+                                     @if($reserva->estado_reserva === 'Activa') text-green-600
+                                    @elseif($reserva->estado_reserva === 'Pendiente') text-yellow-600
+                                    @elseif($reserva->estado_reserva === 'Finalizada') text-blue-600
+                                     @else text-red-600 @endif">
+                                        {{ $reserva->estado_reserva }}
+                                    </p>
                                 </div>
                                 <div>
                                     <span class="text-gray-500 italic">💳 Estado de Pago</span>
@@ -114,6 +126,7 @@
                                         Cancelar Reserva
                                     </button>
                                 </form>
+
                             </div>
                         </div>
                     </div>
@@ -121,5 +134,206 @@
                 </div>
             </div>
         </div>
+        {{-- Modificar Fechas de Reserva --}}
+        @if(auth()->check() && in_array(auth()->user()->rol->nombre_rol, ['Administrador', 'Recepcionista']))
+        <div class="max-w-5xl mx-auto mt-8 px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    ✏️ Modificar Fechas de la Reserva
+                </h3>
+
+                @if(session('success'))
+                <div class="mb-4 bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded">
+                    {{ session('success') }}
+                </div>
+                @endif
+
+                <form method="POST" action="{{ route('reservas.actualizarFechas', $reserva->id) }}"
+                    class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    @csrf
+                    @method('PUT')
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">📅 Nueva Fecha Ingreso</label>
+                        <input type="date" name="fecha_ingreso"
+                            value="{{ \Carbon\Carbon::parse($reserva->fecha_ingreso)->format('Y-m-d') }}"
+                            class="w-full border-gray-300 text-black rounded px-3 py-2 shadow-sm text-sm" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">📅 Nueva Fecha Egreso</label>
+                        <input type="date" name="fecha_egreso"
+                            value="{{ \Carbon\Carbon::parse($reserva->fecha_egreso)->format('Y-m-d') }}"
+                            class="w-full border-gray-300 text-black rounded px-3 py-2 shadow-sm text-sm" required>
+                    </div>
+
+                    <div class="col-span-2 flex justify-center">
+                        <button type="submit"
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 mt-3 rounded shadow-sm font-medium">
+                            Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        @endif
+
+
+        {{-- Modificar Total a Pagar --}}
+        @if(auth()->check() && in_array(auth()->user()->rol->nombre_rol, ['Administrador', 'Recepcionista']))
+        <div class="max-w-5xl mx-auto mt-8 px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    💰 Modificar Total a Pagar
+                </h3>
+
+                @if(session('success_total'))
+                <div class="mb-4 bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded">
+                    {{ session('success_total') }}
+                </div>
+                @endif
+
+                <form method="POST" action="{{ route('reservas.actualizarTotal', $reserva->id) }}" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-gray-600 mb-1">💵 Nuevo Total (ARS)</label>
+                        <input type="number" name="precio_final" min="0" step="0.01"
+                            value="{{ $reserva->precio_final }}"
+                            class="w-full border-gray-300 rounded px-3 py-2 shadow-sm text-sm text-gray-800" required>
+                    </div>
+
+                    <div class="col-span-2 flex justify-center">
+                        <button type="submit"
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 mt-3 rounded shadow-sm font-medium">
+                            Guardar Total
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        @endif
+
+        {{-- Cambiar Estado de Reserva --}}
+        @if(auth()->check() && in_array(auth()->user()->rol->nombre_rol, ['Administrador', 'Recepcionista']))
+                <div class="max-w-5xl mx-auto mt-8 px-4 sm:px-6 lg:px-8">
+                    <div class="bg-white rounded-2xl shadow-lg p-6">
+                        <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            📌 Cambiar Estado de la Reserva
+                        </h3>
+
+                        @if(session('success_estado'))
+                            <div class="mb-4 bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded">
+                                {{ session('success_estado') }}
+                            </div>
+                        @endif
+
+                        <form method="POST" action="{{ route('reservas.actualizarEstado', $reserva->id) }}"
+                            class="grid grid-cols-1 gap-4">
+                            @csrf
+                            @method('PUT')
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-600 mb-1">Nuevo Estado</label>
+                                <select name="estado_reserva"
+                                        class="w-full border-gray-300 rounded px-3 py-2 shadow-sm text-sm text-gray-800"
+                                        required>
+                                    @foreach (['Activa', 'Finalizada', 'Cancelada', 'Pendiente'] as $estado)
+                                        <option value="{{ $estado }}" @if($reserva->estado_reserva === $estado) selected @endif>
+                                            {{ $estado }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="flex justify-center">
+                                <button type="submit"
+                                        class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 mt-3 rounded shadow-sm font-medium">
+                                    Guardar Estado
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            @endif
+
+        {{-- Cambiar Estado de Pago --}}
+        @if(auth()->check() && in_array(auth()->user()->rol->nombre_rol, ['Administrador', 'Recepcionista']))
+        <div class="max-w-5xl mx-auto mt-8 px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    💳 Cambiar Estado de Pago
+                </h3>
+
+                @if(session('success_pago'))
+                <div class="mb-4 bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded">
+                    {{ session('success_pago') }}
+                </div>
+                @endif
+
+                <form method="POST" action="{{ route('reservas.actualizarPago', $reserva->id) }}"
+                    class="grid grid-cols-1 gap-4">
+                    @csrf
+                    @method('PUT')
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Nuevo Estado de Pago</label>
+                        <select name="estado_pago"
+                            class="w-full border-gray-300 rounded px-3 py-2 shadow-sm text-sm text-gray-800"
+                            required>
+                            @foreach (['Pendiente', 'Pagado', 'Cancelado'] as $estado)
+                            <option value="{{ $estado }}" @if($reserva->estado_pago === $estado) selected @endif>
+                                {{ $estado }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="flex justify-center">
+                        <button type="submit"
+                            class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 mt-3 rounded shadow-sm font-medium">
+                            Guardar Estado de Pago
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        @endif
+        {{-- Eliminar Reserva --}}
+        @if(auth()->check() && in_array(auth()->user()->rol->nombre_rol, ['Administrador', 'Recepcionista']))
+        <div class="max-w-5xl mx-auto mt-8 px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h3 class="text-lg font-bold text-red-700 mb-4 flex items-center gap-2">
+                    🗑 Eliminar Reserva
+                </h3>
+
+                @if(session('success_eliminar'))
+                <div class="mb-4 bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded">
+                    {{ session('success_eliminar') }}
+                </div>
+                @endif
+
+                @if(session('error'))
+                <div class="mb-4 bg-red-100 border border-red-400 text-red-800 px-4 py-3 rounded">
+                    {{ session('error') }}
+                </div>
+                @endif
+                <form method="POST" action="{{ route('reservas.eliminar', $reserva->id) }}"
+                    onsubmit="return confirm('¿Estás seguro de que querés eliminar esta reserva?');">
+                    @csrf
+                    @method('DELETE')
+
+                    <div class="flex justify-center">
+                        <button type="submit"
+                            class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 mt-3 rounded shadow-sm font-medium">
+                            Eliminar Reserva
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        @endif
     </section>
+
 </x-app-layout>

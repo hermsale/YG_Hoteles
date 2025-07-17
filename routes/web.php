@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CajaController;
 use App\Http\Controllers\CalendarioController;
 use App\Http\Controllers\ContactoController;
 use App\Http\Controllers\DashboardController;
@@ -10,6 +11,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResenaController;
 use App\Http\Controllers\ReservaController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Middleware\RolAdministrador;
+use App\Http\Middleware\RolAdminRecepcionistaMiddleware;
 use App\Models\Habitacion;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -80,6 +83,8 @@ Route::middleware(['auth','verified', 'rol.admin'])->group(function () {
     Route::delete('backoffice/usuarios/{id}/destroy', [UsuarioController::class, 'destroy'])->name('backoffice.usuarios.destroy');
 });
 
+
+Route::get('backoffice/reservas',[ReservaController::class, 'indexBackoffice'])->middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('backoffice.reservas.index');
 // ruta para crear una reserva desde el backoffice
 Route::get('backoffice/reservas/crear', [ReservaController::class, 'reservaBackoffice'])->middleware(['auth', 'verified', 'rol.AdminRecepcionista'])->name('backoffice.reservas.crear');
 // ruta para cancelar una reserva desde el backoffice
@@ -111,10 +116,65 @@ Route::post('/reserva/detalle/{id}/cancelar', [ReservaController::class, 'cancel
 // se crea la ruta para reservar una habitacion     ||controlador        || nombre de la funcion     || nombre de la ruta personalizada
 Route::post('/reserva/confirmar', [ReservaController::class, 'confirmarYGuardar'])->middleware(['auth','verified'])->name('reservas.confirmarYGuardar');
 
+// rutas agus
+
+
+
+    Route::post('/calendario/actualizar-rango', [CalendarioController::class, 'actualizarRango'])
+    ->name('calendario.actualizar-rango')
+    ->middleware('auth', RolAdministrador::class); // Solo admin
+
+    Route::post('/reserva/{id}/checkin', [ReservaController::class, 'checkIn'])->name('reservas.checkin');
+    Route::post('/reserva/{id}/checkout', [ReservaController::class, 'checkOut'])->name('reservas.checkout');
+    Route::post('/reserva/{id}/cancelar', [ReservaController::class, 'cancelarAjax'])->name('reservas.cancelarAjax'); //AJAX para las pills
+    Route::post('/reserva/{id}/dejar-pendiente', [ReservaController::class, 'dejarPendiente'])->name('reservas.dejarPendiente');
+
+    Route::post('/reserva/actualizar-posicion', [ReservaController::class, 'actualizarPosicion']);
+
+    //Rutas para el crud de reserva desde la vista de detalle de reserva
+    Route::put('/reservas/{id}/actualizar-fechas', [ReservaController::class, 'actualizarFechas'])
+    ->name('reservas.actualizarFechas')
+    ->middleware(RolAdminRecepcionistaMiddleware::class);
+    Route::put('/reservas/{id}/actualizar-total', [ReservaController::class, 'actualizarTotal'])
+    ->name('reservas.actualizarTotal')
+    ->middleware(RolAdminRecepcionistaMiddleware::class);
+    Route::put('/reservas/{id}/actualizar-estado', [ReservaController::class, 'actualizarEstado'])
+    ->name('reservas.actualizarEstado')
+    ->middleware(RolAdminRecepcionistaMiddleware::class);
+    Route::put('/reservas/{id}/actualizar-pago', [ReservaController::class, 'actualizarPago'])
+    ->name('reservas.actualizarPago')
+    ->middleware(RolAdminRecepcionistaMiddleware::class);
+
+
+   //Rutas para la vista de caja
+    Route::get('/caja', [CajaController::class, 'index'])
+    ->middleware(['auth', 'verified', 'rol.AdminRecepcionista'])
+    ->name('caja.index');
+    Route::get('/cierres-caja', [CajaController::class, 'listarCierres'])
+    ->middleware(['auth', 'verified', 'rol.AdminRecepcionista']);
+    Route::get('/cierres/{id}/transacciones', [CajaController::class, 'verDetalle'])
+    ->name('caja.verDetalle')
+    ->middleware(['auth', 'verified', 'rol.AdminRecepcionista']);
+
+
+
+
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
+
+
+Route::delete('/reservas/{id}', [ReservaController::class, 'eliminar'])
+    ->name('reservas.eliminar')
+    ->middleware(['auth', RolAdminRecepcionistaMiddleware::class]);
+
 require __DIR__.'/auth.php';
+
+Route::post('/caja/cierre', [CajaController::class, 'guardarCierre'])
+    ->middleware(['auth', 'verified', 'rol.AdminRecepcionista'])
+    ->name('caja.guardarCierre');

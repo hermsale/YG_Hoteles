@@ -1,10 +1,10 @@
 <nav x-data="{ open: false }" class="bg-gray-900 bg-opacity-80 fixed w-full z-50 border-b border-gray-100">
     <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
-        <!-- Logo + Marca -->
+
         <div class="flex items-center gap-3 text-white text-xl font-bold">
             @auth
             @if (in_array(auth()->user()->rol->nombre_rol, ['Administrador','Recepcionista']))
-            {{-- 🔽 MENÚ HAMBURGUESA CON DROPDOWN --}}
+
             <x-dropdown align="left" width="48">
                 <x-slot name="trigger">
                     <button class="inline-flex items-center p-2 text-sm font-medium text-white bg-gray-800 rounded-md hover:text-gray-300 focus:outline-none">
@@ -27,10 +27,14 @@
                         👥 Usuarios
                     </x-dropdown-link>
                     @endif
-
-                    {{-- Podés agregar más entradas si querés --}}
                     <x-dropdown-link :href="route('reservas.index')">
                         📋 Reservas
+                    </x-dropdown-link>
+                    <x-dropdown-link :href="route('calendario.index')">
+                        📅 Calendario
+                    </x-dropdown-link>
+                    <x-dropdown-link :href="route('caja.index')">
+                        🧾 Caja
                     </x-dropdown-link>
                 </x-slot>
             </x-dropdown>
@@ -59,7 +63,7 @@
         <!-- Navegación -->
         <div class="hidden sm:flex items-center gap-4">
             @auth
-            <input type="text" placeholder="Buscar" class="px-3 py-1 rounded text-black">
+
 
             @if (in_array(auth()->user()->rol->nombre_rol, ['Administrador', 'Recepcionista']))
             <a href="{{ route('reservas.indexBackoffice') }}" class="text-white hover:underline">

@@ -5,10 +5,7 @@
     <div class="pt-28 px-4 md:px-6 relative">
 
         {{-- 🔻 CABECERA DEL DASHBOARD --}}
-        <div class="flex items-center justify-between mb-4">
-
-
-
+        <div class="flex  items-center justify-between mb-4">
 
             {{-- 📝 TÍTULO DEL DASHBOARD --}}
             <h2 class="text-xl text-center font-semibold text-gray-800 mt-4">
@@ -22,22 +19,19 @@
             <div class="flex items-center gap-3">
 
                 {{-- 📅 ÍCONO DE CALENDARIO (enlace a la vista /calendario) --}}
-                <a href="{{ route('calendario.index') }}" class="text-blue-600 hover:text-blue-800 transition-all duration-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M8 7V3M16 7V3M4 11h16M4 19h16M4 15h16M4 7h16a2 2 0 012 2v11a2 2 0 01-2 2H4a2 2 0 01-2-2V9a2 2 0 012-2z" />
-                    </svg>
+                <a href="{{ route('calendario.index') }}" class="text-blue-600 hover:text-blue-800 transition-all duration-200 text-4xl">
+                    📅
                 </a>
 
                 {{-- ✅ BOTÓN "CREAR NUEVA RESERVA" --}}
-                <a  href="{{route('backoffice.reservas.crear')}} "class="bg-green-400 hover:bg-green-500 text-white font-semibold px-4 py-2 rounded-lg shadow">
+                <a href="{{route('backoffice.reservas.crear')}} " class="bg-green-400 hover:bg-green-500 text-white font-semibold px-4 py-2 rounded-lg shadow">
                     Crear Nueva Reserva
                 </a>
             </div>
         </div>
 
         {{-- 🔢 CARDS DE MÉTRICAS PRINCIPALES: LLEGADAS, SALIDAS, RESERVAS --}}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center mb-6">
+        <!-- <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center mb-6">
 
             {{-- 🟢 Llegadas --}}
             <div class="bg-white rounded-xl p-4 shadow border">
@@ -56,25 +50,26 @@
                 <p class="text-2xl font-bold text-blue-600">{{ $totalAlojados }}</p>
                 <p class="text-sm text-gray-600">HABITACIONES RESERVADAS</p>
             </div>
-        </div>
+        </div> -->
 
         {{-- 🗓️ CALENDARIO DE RESERVAS --}}
 
 
         {{-- 🔄 SECCIÓN PRINCIPAL: RESERVAS Y ACTIVIDAD DE HOY --}}
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="grid gap-6">
 
             {{-- 📋 BLOQUE DE RESERVAS --}}
             {{-- 📋 BLOQUE DE RESERVAS CON LIVEWIRE --}}
-            <div class="bg-white p-4 rounded-xl shadow border">
+            <div class="bg-white items-center  p-4 rounded-xl shadow border">
                 <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">Reservas</h3>
 
                 @livewire('dashboard-reservas')
+
             </div>
 
 
             {{-- 📊 BLOQUE DE ACTIVIDAD DEL DÍA --}}
-            <div class="bg-white p-4 rounded-xl shadow border">
+            <!-- <div class="bg-white p-4 rounded-xl shadow border">
                 <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">Actividad de Hoy</h3>
 
                 {{-- Botones de filtro (Ventas / Cancelaciones) --}}
@@ -118,7 +113,7 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </div> -->
         </div>
     </div>
 </x-app-layout>

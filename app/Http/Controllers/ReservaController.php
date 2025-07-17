@@ -11,19 +11,26 @@ use Illuminate\Support\Facades\Log;
 class ReservaController extends Controller
 {
     /**
-     * muestro todas las reservas del usuario logueado
+     * Muestra todas las reservas, según el tipo de usuario
      */
     public function index()
     {
-        $reservas = Reserva::where('id_usuario', Auth::id())
-            ->with(['habitacion.categoria'])
-            ->orderBy('fecha_creacion', 'desc') // Carga eficiente para la tabla
-            ->get();
+        $usuario = Auth::user();
+
+        if (in_array($usuario->rol->nombre_rol, ['Administrador', 'Recepcionista'])) {
+            $reservas = Reserva::with(['habitacion.categoria', 'usuario'])
+                ->orderBy('fecha_creacion', 'desc')
+                ->get();
+        } else {
+            $reservas = Reserva::where('id_usuario', $usuario->id)
+                ->with(['habitacion.categoria'])
+                ->orderBy('fecha_creacion', 'desc')
+                ->get();
+        }
 
         return view('cliente.reservas.index', compact('reservas'));
     }
 
-    // Gestion de Reservas en el Backoffice
     public function indexBackoffice()
     {
         if (!in_array(Auth::user()->rol->nombre_rol, ['Administrador', 'Recepcionista'])) {
@@ -37,21 +44,14 @@ class ReservaController extends Controller
         return view('backoffice.reservas.index', compact('reservas'));
     }
 
-
-    /**
-     * pantalla para confirmar una reserva
-     */
-    // método para confirmar una reserva
     public function confirmar(Request $request)
     {
-
         $habitacion = Habitacion::with('categoria')->findOrFail($request->habitacion_id);
-
 
         $fechaEntrada = new \Carbon\Carbon($request->fecha_entrada);
         $fechaSalida = new \Carbon\Carbon($request->fecha_salida);
-        $cantidadNoches = $fechaEntrada->diffInDays($fechaSalida); // calculo la cantidad de noches entre las fechas
-        $importeTotal = $cantidadNoches * $habitacion->precio_noche; // calculo del importe total
+        $cantidadNoches = $fechaEntrada->diffInDays($fechaSalida);
+        $importeTotal = $cantidadNoches * $habitacion->precio_noche;
 
         return view('cliente.reservas.confirmar', [
             'habitacion' => $habitacion,
@@ -62,71 +62,53 @@ class ReservaController extends Controller
             'huespedes' => $request->huespedes,
         ]);
     }
-    /**
-     * funcion para confirmar y almacenar una reserva
-     */
+
     public function confirmarYGuardar(Request $request)
     {
         Log::info('Se ejecutó confirmar y guardar Reserva');
 
-        try {
-            // validamos los datos de la reserva
-            $request->validate([
-                'habitacion_id' => 'required|exists:habitaciones,id',
-                'fecha_ingreso' => ['required', 'regex:/^\d{2}\/\d{2}\/\d{4}$/'], // Formato dd/mm/yyyy
-                'fecha_egreso' => ['required', 'regex:/^\d{2}\/\d{2}\/\d{4}$/'],
-                'precio_total' => 'required|numeric|min:0',
-            ]);
-            Log::info('Datos de reserva validados correctamente');
-        } catch (\Exception $e) {
-            Log::error('Error al validar los datos de la reserva: ' . $e->getMessage());
-            return redirect()->back()->withErrors($e->getMessage())->withInput();
-        }
-        // Verificamos que el usuario esté autenticado
+        $request->validate([
+            'habitacion_id' => 'required|exists:habitaciones,id',
+            'fecha_ingreso' => ['required', 'regex:/^\d{2}\/\d{2}\/\d{4}$/'],
+            'fecha_egreso' => ['required', 'regex:/^\d{2}\/\d{2}\/\d{4}$/'],
+            'precio_total' => 'required|numeric|min:0',
+        ]);
+
         if (!Auth::check()) {
             return redirect()->route('login')->with('error', 'Debés iniciar sesión para reservar.');
         }
 
-        // creamos una nueva reserva
-        // y asignamos los datos del request
         $reserva = new Reserva();
-        $reserva->id_usuario = Auth::id(); // o $request->user()->id
+        $reserva->id_usuario = Auth::id();
         $reserva->id_habitacion = $request->habitacion_id;
         $reserva->fecha_ingreso = \Carbon\Carbon::createFromFormat('d/m/Y', $request->fecha_ingreso);
         $reserva->fecha_egreso = \Carbon\Carbon::createFromFormat('d/m/Y', $request->fecha_egreso);
         $reserva->precio_final = $request->precio_total;
         $reserva->estado_reserva = 'Activa';
-        $reserva->estado_pago = 'Pendiente'; // Estado inicial de pago
-        $reserva->aviso_pago = false; // Estado inicial aviso de pago
+        $reserva->estado_pago = 'Pendiente';
+        $reserva->aviso_pago = false;
         $reserva->fecha_creacion = now();
-
         $reserva->save();
-        // registramos la reserva en el log
+
         Log::info('ID de reserva creada: ' . $reserva->id);
-        // redirigimos al usuario a la lista de reservas con un mensaje de éxito
+
         return redirect()->route('reservas.index')->with('success', 'Reserva confirmada correctamente.');
     }
 
-    // funcion para dar aviso de pago de una reserva
     public function avisoPago(string $id)
     {
-        Log::info('Se ejecutó aviso de pago');
         $reserva = Reserva::where('id', $id)->where('id_usuario', Auth::id())->firstOrFail();
 
         if ($reserva->estado_pago !== 'Pendiente') {
             return back()->with('error', 'No se puede dar aviso de pago en este estado.');
         }
 
-        Log::info($reserva->aviso_pago);
         $reserva->aviso_pago = true;
         $reserva->save();
 
         return back()->with('success', 'Aviso de pago enviado correctamente.');
     }
 
-    // funcion para confirmar el pago de una reserva
-    // Esta función se ejecuta cuando el usuario confirma que ha realizado el pago
-    // y el administrador o recepcionista confirma que si se pago
     public function pagoConfirmado(string $id)
     {
         if (!in_array(Auth::user()->rol->nombre_rol, ['Administrador', 'Recepcionista'])) {
@@ -145,70 +127,202 @@ class ReservaController extends Controller
         return back()->with('success', 'Pago confirmado correctamente.');
     }
 
-    // boton para cancelar una reserva
     public function cancelarReserva(string $id)
     {
-        Log::info('Se ejecutó cancelar reserva');
         $reserva = Reserva::where('id', $id)->where('id_usuario', Auth::id())->firstOrFail();
 
-        // Verificar si la reserva está en un estado que permite cancelación
         if ($reserva->estado_reserva !== 'Activa') {
             return back()->with('error', 'No se puede cancelar una reserva que no está activa.');
         }
 
-        // Cambiar el estado de la reserva a cancelada
         $reserva->estado_reserva = 'Cancelada';
-
         $reserva->save();
 
         return back()->with('success', 'Reserva cancelada correctamente.');
     }
 
-    // cancelo una reserva desde el backoffice . esta cancelacion no necesita que el usuario logueado sea el dueño de la reserva
-     public function cancelarReservaBackoffice(string $id)
+    public function cancelarReservaBackoffice(string $id)
     {
-        Log::info('Se ejecutó cancelar reserva backoffice ');
-        $reserva = Reserva::findOrFail( $id);
+        $reserva = Reserva::findOrFail($id);
 
-
-        // Verificar si la reserva está en un estado que permite cancelación
         if ($reserva->estado_reserva !== 'Activa') {
             return back()->with('error', 'No se puede cancelar una reserva que no está activa.');
         }
 
-        // Cambiar el estado de la reserva a cancelada
         $reserva->estado_reserva = 'Cancelada';
-
         $reserva->save();
 
         return back()->with('success', 'Reserva cancelada correctamente.');
     }
 
-    /**
-     * muestro los detalles de una reserva específica
-     */
     public function detalleReserva(string $id)
     {
         $reserva = Reserva::with(['habitacion.categoria', 'habitacion.imagenes'])->findOrFail($id);
-
-        // Cargar la promoción asociada
-        // parseo las fechas de ingreso y egreso
         $fechaIngreso = \Carbon\Carbon::parse($reserva->fecha_ingreso);
         $fechaEgreso = \Carbon\Carbon::parse($reserva->fecha_egreso);
+        $cantidadNoches = $fechaIngreso->diffInDays($fechaEgreso);
 
-        // Calcular la cantidad de noches
-        $cantidadNoches =   $fechaIngreso->diffInDays($fechaEgreso);
-
-        // Verificar que la reserva le pertenezca al usuario logueado
-        if ($reserva->id_usuario !== Auth::id()) {
+        if (Auth::user()->rol->nombre_rol === 'Cliente' && $reserva->id_usuario !== Auth::id()) {
             abort(403, 'No tenés permiso para ver esta reserva.');
         }
 
         return view('cliente.reservas.detalle', compact('reserva', 'cantidadNoches'));
     }
 
-    public function reservaBackoffice(){
-
+    public function reservaBackoffice()
+    {
         return view('backoffice.reservas.crear');
+    }
+
+    // Métodos nuevos para gestión en el calendario
+    public function checkIn($id)
+    {
+        $reserva = Reserva::findOrFail($id);
+
+        if ($reserva->estado_reserva !== 'pendiente') {
+            return response()->json(['success' => false, 'message' => 'Solo se puede hacer check-in si la reserva está pendiente.']);
+        }
+
+        $reserva->estado_reserva = 'Activa';
+        $reserva->save();
+
+        return response()->json(['success' => true, 'estado' => 'Activa']);
+    }
+
+    public function checkOut($id)
+    {
+        $reserva = Reserva::findOrFail($id);
+
+        if ($reserva->estado_reserva !== 'Activa') {
+            return response()->json(['success' => false, 'message' => 'Solo se puede hacer check-out si la reserva está activa.']);
+        }
+
+        $reserva->estado_reserva = 'Finalizada';
+        $reserva->save();
+
+        return response()->json(['success' => true, 'estado' => 'Finalizada']);
+    }
+
+    public function cancelarAjax($id)
+    {
+        $reserva = Reserva::findOrFail($id);
+
+        if (in_array($reserva->estado_reserva, ['Cancelada', 'Finalizada'])) {
+            return response()->json(['success' => false, 'message' => 'La reserva ya está cancelada o finalizada.']);
+        }
+
+        $reserva->estado_reserva = 'Cancelada';
+        $reserva->save();
+
+        return response()->json(['success' => true, 'estado' => 'Cancelada']);
+    }
+
+    public function dejarPendiente($id)
+    {
+        $reserva = Reserva::findOrFail($id);
+
+        if ($reserva->estado_reserva !== 'Activa') {
+            return response()->json(['success' => false, 'message' => 'Solo podés revertir una reserva activa a pendiente.']);
+        }
+
+        $reserva->estado_reserva = 'pendiente';
+        $reserva->save();
+
+        return response()->json(['success' => true, 'estado' => 'pendiente']);
+    }
+
+    public function actualizarPosicion(Request $request)
+    {
+        $reserva = Reserva::find($request->id);
+
+        if (!$reserva) {
+            return response()->json(['success' => false, 'message' => 'Reserva no encontrada']);
+        }
+
+        $reserva->fecha_ingreso = $request->nueva_fecha_ingreso;
+        $reserva->fecha_egreso = $request->nueva_fecha_egreso;
+        $reserva->id_habitacion = $request->nueva_id_habitacion;
+        $reserva->save();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function verDetalle($id)
+    {
+        $reserva = Reserva::with(['usuario', 'habitacion.categoria', 'habitacion.imagenes', 'promocion'])->findOrFail($id);
+        $cantidadNoches = $reserva->fecha_ingreso->diffInDays($reserva->fecha_egreso);
+
+        return view('backoffice.reservas.detalle', compact('reserva', 'cantidadNoches'));
+    }
+
+    public function actualizarFechas(Request $request, $id)
+    {
+        $reserva = Reserva::findOrFail($id);
+
+        $request->validate([
+            'fecha_ingreso' => 'required|date',
+            'fecha_egreso' => 'required|date|after:fecha_ingreso',
+        ]);
+
+        $reserva->fecha_ingreso = $request->fecha_ingreso;
+        $reserva->fecha_egreso = $request->fecha_egreso;
+        $reserva->save();
+
+        return back()->with('success', 'Fechas actualizadas correctamente.');
+    }
+
+    public function actualizarTotal(Request $request, $id)
+    {
+        $reserva = Reserva::findOrFail($id);
+
+        $request->validate([
+            'precio_final' => 'required|numeric|min:0',
+        ]);
+
+        $reserva->precio_final = $request->precio_final;
+        $reserva->save();
+
+        return back()->with('success_total', 'El total a pagar fue actualizado correctamente.');
+    }
+
+    public function actualizarEstado(Request $request, $id)
+    {
+        $reserva = Reserva::findOrFail($id);
+
+        $request->validate([
+            'estado_reserva' => 'required|in:Activa,Finalizada,Cancelada,Pendiente',
+        ]);
+
+        $reserva->estado_reserva = $request->estado_reserva;
+        $reserva->save();
+
+        return back()->with('success_estado', 'Estado de reserva actualizado correctamente.');
+    }
+
+    public function actualizarPago(Request $request, $id)
+    {
+        $reserva = Reserva::findOrFail($id);
+
+        $request->validate([
+            'estado_pago' => 'required|in:Pendiente,Pagado,Cancelado',
+        ]);
+
+        $reserva->estado_pago = $request->estado_pago;
+        $reserva->save();
+
+        return back()->with('success_pago', 'Estado de pago actualizado correctamente.');
+    }
+
+    public function eliminar($id)
+    {
+        $reserva = Reserva::findOrFail($id);
+
+        if ($reserva->trashed()) {
+            return back()->with('error', 'La reserva ya fue eliminada.');
+        }
+
+        $reserva->delete();
+
+        return redirect()->route('reservas.indexBackoffice')->with('success_eliminar', 'La reserva fue eliminada correctamente.');
     }
 }

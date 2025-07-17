@@ -6,7 +6,8 @@
         <div class="bg-gray-100 text-black rounded-lg shadow p-6 flex flex-col md:flex-row gap-6">
             @php $imagen = $habitacion->imagenes->first(); @endphp
 
-            <img src="{{ asset($imagen->url ?? 'img/no-image.png') }}"
+            
+            <img src="{{ asset($imagen->url ?? asset('img/otros/no-image.png')) }}"
                 class="w-full md:w-1/3 max-h-64 object-cover rounded-lg">
 
             <div class="md:w-2/3">

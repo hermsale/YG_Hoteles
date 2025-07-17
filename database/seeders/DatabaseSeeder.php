@@ -33,6 +33,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             PromocionSeeder::class,
             ReservaSeeder::class,
+            CalendarioSeeder::class,
+            MetodoPagoSeeder::class,
         ]
         );
     }

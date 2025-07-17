@@ -1,125 +1,219 @@
 <x-app-layout>
-    {{-- Contenedor principal con padding superior para no ser tapado por el navbar --}}
+
+    {{-- ✅ Meta CSRF ya debe estar incluido en app-layout, pero por las dudas lo ponemos igual aca --}}
+    @push('head')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="offset-base" content="{{ $fechas->keys()->first() }}">
+    <meta name="fecha-min-calendario" content="{{ \Carbon\Carbon::parse($rango->fecha_inicio)->format('Y-m-d') }}">
+    <meta name="fecha-max-calendario" content="{{ \Carbon\Carbon::parse($rango->fecha_fin)->format('Y-m-d') }}">
+    @endpush
+
     <div class="pt-28 px-4 md:px-6">
-
-        {{-- 🔲 Sección superior con controles: menú, buscador, botones de acción --}}
-        <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
-
-            {{-- 🟫 Grupo izquierdo: Menú hamburguesa + buscador centrado --}}
-            <div class="flex items-center justify-between w-full gap-3">
-                
-                {{-- Menú hamburguesa fijo a la izquierda --}}
-                <div class="shrink-0">
-                    <button class="text-gray-700 hover:text-gray-900 focus:outline-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:h-8 md:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                    </button>
-                </div>
-
-                {{-- Buscador centrado horizontalmente usando mx-auto --}}
-                <div class="mx-auto">
-                    <input type="text" placeholder="Buscar reservas"
-                        class="border rounded px-3 py-1 text-sm w-64 shadow-sm focus:ring focus:ring-blue-200">
-                </div>
-            </div>
+        <div class="calendario-container">
 
 
-            {{-- 🟢 Grupo derecho: botón HOY y selector de orden --}}
-            <div class="flex items-center gap-2">
-                {{-- Botón HOY con icono + --}}
-                <button class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-full flex items-center gap-1 shadow">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M12 4v16m8-8H4" />
-                    </svg>
-                    HOY
+            {{-- 🔍 Fecha manual --}}
+            @php
+            $rol = Auth::check() ? Auth::user()->rol->nombre_rol : null;
+            @endphp
+
+            @if ($rol === 'Administrador' || $rol === 'Recepcionista')
+            <div class="mb-4 flex items-center gap-3">
+                <input type="date" id="inputFechaIr"
+                    class="border px-3 py-1 rounded shadow-sm w-40"
+                    value="{{ $fechaBase->format('Y-m-d') }}">
+
+                <button type="button"
+                    id="btnIrFecha"
+                    class="bg-blue-500 text-white px-3 py-1 rounded">
+                    Ir a fecha
                 </button>
 
-                {{-- Selector de orden (por nombre, tipo, etc.) --}}
-                <select class="border text-sm rounded px-2 py-1 shadow-sm">
-                    <option>Por nombre</option>
-                    <option>Por tipo</option>
-                </select>
+                {{--
+            @if ($rol === 'Administrador')
+                <button type="button"
+                        onclick="mostrarFormularioCalendario()"
+                        class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded">
+                    Establecer calendario
+                </button>
+            @endif
+            --}}
+
+
             </div>
-        </div>
+            @endif
 
-        {{-- 🗓️ Tabla del calendario con scroll horizontal --}}
-        <div class="overflow-x-auto">
-            <table class="table-auto min-w-[1500px] w-full text-sm text-center border-collapse bg-white shadow rounded-lg">
 
-                {{-- 🔝 Encabezado del mes completo --}}
-                <thead class="bg-gray-200 text-gray-700">
-                    <tr>
-                        {{-- Celda fija para habitaciones --}}
-                        <th class="sticky left-0 bg-gray-200 z-10 w-36 border border-gray-300">Habitación</th>
+            {{-- 🔝 Nombre del mes visible siempre (actualizado por JS) --}}
+            <div id="mes-actual"
+                class="text-lg font-bold uppercase text-center text-gray-800 mb-3">
+                {{ mb_strtoupper($fechaBase->translatedFormat('F Y'), 'UTF-8') }}
+            </div>
 
-                        {{-- Encabezado con nombre del mes, abarcando todas las fechas visibles --}}
-                        <th colspan="15" class="text-lg font-semibold border border-gray-300 py-2">
-                            JUNIO 2025
-                        </th>
-                    </tr>
-
-                    {{-- 🗓️ Encabezado de días con % de ocupación --}}
-                    <tr>
-                        <th class="sticky left-0 bg-gray-100 z-10 w-36 border border-gray-300"></th>
-                        @for ($i = 1; $i <= 15; $i++)
-                            <th class="w-36 border border-gray-300 py-1">
-                                <div class="font-medium">Martes {{ $i }}</div>
-                                <div class="text-xs text-gray-500">80% ocupación</div>
+            {{-- 📅 Tabla del calendario --}}
+            <div class="overflow-x-auto relative calendario-scroll">
+                <table class="min-w-[1500px] table-auto border-collapse bg-white" id="tabla-calendario">
+                    <thead>
+                        {{-- Fila de días --}}
+                        <tr>
+                            <th id="th-habitacion" class="sticky left-0 z-10 bg-gray-100 border border-gray-300 text-left px-2">
+                                Habitación
                             </th>
-                        @endfor
-                    </tr>
-                </thead>
+                            @foreach ($fechas as $fecha)
+                            <th
+                                class="fecha-col text-center align-top border border-gray-300 px-2 py-1 min-w-[9.5rem]"
+                                data-fecha="{{ $fecha->toDateString() }}">
+                                <div class="flex flex-row justify-center gap-1 text-[13px] font-semibold uppercase">
+                                    <span>{{ $fecha->translatedFormat('l') }}</span>
+                                    <span>{{ $fecha->translatedFormat('d') }}</span>
+                                </div>
+                            </th>
+                            @endforeach
+                        </tr>
+                        {{-- Fila de ocupación --}}
+                        <tr>
+                            <th class="sticky left-0 bg-gray-50 text-gray-500 text-sm border border-gray-300 px-2">
+                                <span class="text-[12px]">Porcentaje de ocupación</span>
+                            </th>
+                            @foreach ($fechas as $fecha)
+                            <td class="text-gray-400 text-xs py-1 border border-gray-100">
+                                {{ $ocupaciones[$fecha->toDateString()] ?? 0 }}%
+                            </td>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($habitaciones as $habitacion)
+                        <tr class="h-20 border-t fila-habitacion" data-habitacion-id="{{ $habitacion->id }}">
 
-                {{-- 🔢 Cuerpo del calendario: habitaciones × días --}}
-                <tbody>
-                    @for ($h = 1; $h <= 5; $h++)
-                        <tr class="border-t border-gray-200">
-
-                            {{-- Celda fija con nombre de habitación --}}
-                            <td class="sticky left-0 bg-white z-10 border border-gray-200 text-left px-2 font-medium text-gray-800">
-                                Habitación {{ $h }}
+                            {{-- Nombre de habitación --}}
+                            <td class="sticky left-0 bg-white border border-gray-300 text-left px-2 font-semibold">
+                                {{ $habitacion->nombre }}
                             </td>
 
-                            {{-- Celdas por día: precio, disponibilidad y ficha de reserva --}}
-                            @for ($d = 1; $d <= 15; $d++)
-                                <td class="relative border border-gray-200 p-1 h-24 group">
-
-                                    {{-- 💲 Precio y disponibilidad (simulado) --}}
-                                    <div class="text-[10px] text-gray-500 text-center">
-                                        $15.000<br>
-                                        <span class="font-bold">1</span> libre
-                                    </div>
-
-                                    {{-- 🧾 Fichas de reservas simuladas en algunas celdas --}}
-                                    @if ($h == 2 && $d == 3)
-                                        <div class="bg-green-500 text-white text-xs px-2 py-1 mt-2 rounded shadow cursor-pointer">
-                                            nombre, apellido
-                                        </div>
-                                    @elseif ($h == 1 && in_array($d, [7,8,9]))
-                                        <div class="bg-sky-400 text-white text-xs px-2 py-1 mt-2 rounded shadow cursor-pointer">
-                                            nombre, apellido
-                                        </div>
-                                    @endif
-
-                                    {{-- 🧠 Tooltip que se mostrará al pasar el mouse (simulado, futuro JS/Livewire) --}}
-                                    <div class="hidden group-hover:block absolute top-full left-0 z-50 bg-white text-xs p-2 shadow rounded border mt-1 w-64">
-                                        <p><strong>nombre completo</strong> - status (in house)</p>
-                                        <p class="mt-1 text-gray-700">Check-in / out: 01/06 - 04/06</p>
-                                        <p class="text-gray-700">Huéspedes: 2</p>
-                                        <p class="text-gray-700">Saldo pendiente: $0.00</p>
-                                        <hr class="my-1">
-                                        <a href="#" class="text-blue-600 hover:underline">Detalles de la reserva</a><br>
-                                        <a href="#" class="text-indigo-600 hover:underline">Check-out</a>
-                                    </div>
+                            {{-- Celdas por fecha --}}
+                            @foreach ($fechas as $fecha)
+                            @php
+                            $ocupada = $habitacion->reservas()
+                            ->whereDate('fecha_ingreso', '<=', $fecha)
+                                ->whereDate('fecha_egreso', '>', $fecha)
+                                ->exists();
+                                $precio = $habitacion->precio_noche ?? 100;
+                                @endphp
+                                <td class="relative border border-gray-200 text-[11px] text-center p-1 bg-white">
+                                    ${{ number_format($precio, 0, ',', '.') }}<br>
+                                    <span class="font-bold">{{ $ocupada ? 0 : 1 }}</span>
+                                    <div class="overlay-reserva absolute inset-0"></div>
                                 </td>
-                            @endfor
+                                @endforeach
                         </tr>
-                    @endfor
-                </tbody>
-            </table>
+                        @endforeach
+                    </tbody>
+                </table>
+
+
+                {{-- 🔷 CAPA DE PASTILLAS DE RESERVAS --}}
+                <div id="layer-pills-reservas" class="absolute top-0 left-0 w-full h-full z-20">
+
+                    @foreach ($habitaciones as $habitacionIndex => $habitacion)
+                    @foreach ($reservas[$habitacion->id] ?? [] as $reserva)
+
+                    @php
+                    $inicio = \Carbon\Carbon::parse($reserva->fecha_ingreso)->toDateString();
+                    $fin = \Carbon\Carbon::parse($reserva->fecha_egreso)->toDateString();
+                    $estado = $reserva->estado_reserva;
+                    $pagada = $reserva->estado_pago === 'Pagado';
+                    $usuario = $reserva->usuario->name ?? 'Cliente';
+
+                    $colInicio = $fechas->search(fn($fecha) => $fecha->toDateString() === $inicio);
+                    $colFin = $fechas->search(fn($fecha) => $fecha->toDateString() === $fin);
+
+                    // Si la fecha de egreso no está en el array, asumimos que termina en el último día del calendario
+                    if ($colFin === false) {
+                    $colFin = $fechas->count(); // una columna más allá del final
+                    }
+
+                    if ($colInicio !== false && $colFin > $colInicio) {
+                    $colSpan = $colFin - $colInicio;
+                    // Renderizamos la pill normalmente
+                    }
+                    @endphp
+
+                    @if ($colInicio !== false && $colFin !== false)
+                    <div
+                        class="pill-reserva"
+                        data-id="{{ $reserva->id }}"
+                        data-start="{{ $colInicio }}"
+                        data-span="{{ $colSpan }}"
+                        data-habitacion-id="{{ $habitacion->id }}"
+                        data-color="{{ $estado }}"
+                        data-pagada="{{ $pagada ? '1' : '0' }}"
+                        data-usuario="{{ $usuario }}">
+                        {{ $usuario }}
+                        @unless($pagada)
+                        <span class="dot-pago-pendiente"></span>
+                        @endunless
+                    </div>
+                    @endif
+
+                    @endforeach
+                    @endforeach
+
+                </div>
+            </div>
+
         </div>
+    </div>
+    </div>
+
+    {{-- 📆 MODAL DE RANGO DE CALENDARIO (invisible por defecto) --}}
+    <div id="modalCalendario" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+        <div class="bg-white text-gray-800 p-6 rounded shadow-lg max-w-md w-full relative">
+            <h2 class="text-lg font-semibold mb-4">📅 Establecer rango de calendario</h2>
+
+            <form id="formularioCalendario" method="POST" action="{{ route('calendario.actualizar-rango') }}">
+                @csrf
+                @if(session('error'))
+                <div id="alerta-error-calendario" class="bg-red-100 border border-red-400 text-red-800 px-4 py-2 rounded mb-4 text-sm shadow">
+                    ⚠️ {{ session('error') }}
+                </div>
+                @endif
+
+                <label class="block mb-2 font-medium">Fecha desde:</label>
+                <input type="date" name="fecha_inicio" class="border px-3 py-2 rounded w-full mb-4" required>
+
+                <label class="block mb-2 font-medium">Fecha hasta:</label>
+                <input type="date" name="fecha_fin" class="border px-3 py-2 rounded w-full mb-4" required>
+
+                <div class="flex justify-end gap-2 mt-4">
+                    <button type="button" onclick="cerrarFormularioCalendario()"
+                        class="px-4 py-2 bg-gray-300 text-gray-800 rounded">Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    @if (session('error'))
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof mostrarFormularioCalendario === 'function') {
+                mostrarFormularioCalendario();
+            }
+        });
+    </script>
+    @endif
+    {{-- MENU CONTEXTUAL DE LAS PILLS --}}
+    <div id="menu-contextual-reserva"
+        class="hidden absolute bg-white border rounded shadow-lg text-sm z-50 w-48"
+        style="display: none">
+        <ul>
+            <li><a href="#" class="px-4 py-2 block text-black hover:bg-gray-100" id="btn-detalle">Ver Detalles</a></li>
+            <li><button class="w-full text-left px-4 py-2 text-black hover:bg-gray-100" id="btn-checkin">Hacer Check-in</button></li>
+            <li><button class="w-full text-left px-4 py-2 text-black hover:bg-gray-100" id="btn-checkout">Hacer Check-out</button></li>
+            <li><button class="w-full text-left px-4 py-2 text-black text-red-600 hover:bg-red-100" id="btn-cancelar">Cancelar</button></li>
+            <li><button class="w-full text-left px-4 py-2 text-black hover:bg-gray-100" id="btn-dejar-pendiente">Dejar Pendiente</button></li>
+        </ul>
     </div>
 </x-app-layout>

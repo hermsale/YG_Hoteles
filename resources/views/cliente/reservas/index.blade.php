@@ -21,7 +21,6 @@
                 @endif
 
                 {{-- Tabla de reservas --}}
-                {{-- Tabla de reservas --}}
                 <div class="overflow-x-auto rounded-lg shadow-md border border-gray-300">
                     <table class="min-w-full text-sm text-gray-900">
                         <thead class="bg-gray-100 text-left text-gray-700 uppercase text-xs tracking-wider">
@@ -48,6 +47,7 @@
                                 <td class="px-4 py-3">
                                     <span class="font-semibold
                             @if($reserva->estado_reserva === 'Activa') text-green-600
+                            @elseif($reserva->estado_reserva === 'pendiente') text-yellow-600
                             @elseif($reserva->estado_reserva === 'Finalizada') text-blue-600
                             @elseif($reserva->estado_reserva === 'Cancelada') text-red-600
                             @else text-gray-600 @endif">
@@ -96,5 +96,7 @@
 
             </div>
         </div>
+
+
     </section>
 </x-app-layout>

@@ -20,61 +20,61 @@
                 @endif
 
                 {{-- Tabla de reservas --}}
-                <div class="w-full rounded-lg shadow-md border border-gray-300 overflow-hidden">
-                    <table class="w-full text-sm text-gray-900">
+                <div class="w-full rounded-lg shadow-md border border-gray-300">
+                    <table class="w-full table-fixed text-[13px] text-gray-900">
                         <thead class="bg-gray-100 text-left text-gray-700 uppercase text-xs tracking-wider">
                             <tr>
-                                <th class="px-4 py-3 whitespace-nowrap">Nro</th>
-                                <th class="px-4 py-3 whitespace-nowrap">Cliente</th>
-                                <th class="px-4 py-3 whitespace-nowrap">Fecha de compra</th>
-                                <th class="px-4 py-3 whitespace-nowrap">Estado Reserva</th>
-                                <th class="px-4 py-3 whitespace-nowrap">Estado Pago</th>
-                                <th class="px-4 py-3 whitespace-nowrap">Habitación</th>
-                                <th class="px-4 py-3 whitespace-nowrap">Ingreso</th>
-                                <th class="px-4 py-3 whitespace-nowrap">Egreso</th>
-                                <th class="px-4 py-3 whitespace-nowrap">Importe</th>
-                                <th class="px-4 py-3 text-center whitespace-nowrap">Acciones</th>
+                                <th class="px-2 py-2 w-14">Nro</th>
+                                <th class="px-2 py-2 w-32 truncate">Cliente</th>
+                                <th class="px-2 py-2 w-32">Fecha de compra</th>
+                                <th class="px-2 py-2 w-28">Estado Reserva</th>
+                                <th class="px-2 py-2 w-28">Estado Pago</th>
+                                <th class="px-2 py-2 w-48 truncate">Habitación</th>
+                                <th class="px-2 py-2 w-28">Ingreso</th>
+                                <th class="px-2 py-2 w-28">Egreso</th>
+                                <th class="px-2 py-2 w-24">Importe</th>
+                                <th class="px-2 py-2 w-32 text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200 bg-white">
                             @forelse ($reservas as $reserva)
                             <tr class="hover:bg-gray-50 transition">
-                                <td class="px-4 py-3 text-center whitespace-nowrap">#{{ $reserva->id ?? 'N/A' }}</td>
-                                <td class="px-4 py-3 truncate max-w-[150px]">{{ $reserva->usuario->name ?? 'N/A' }}</td>
-                                <td class="px-4 py-3 whitespace-nowrap">{{ \Carbon\Carbon::parse($reserva->fecha_creacion)->format('d/m/Y H:i') }}</td>
-                                <td class="px-4 py-3 whitespace-nowrap">
+                                <td class="px-2 py-2 text-center">#{{ $reserva->id ?? 'N/A' }}</td>
+                                <td class="px-2 py-2 truncate">{{ $reserva->usuario->name ?? 'N/A' }}</td>
+                                <td class="px-2 py-2">{{ \Carbon\Carbon::parse($reserva->fecha_creacion)->format('d/m/Y H:i') }}</td>
+                                <td class="px-2 py-2">
                                     <span class="font-semibold
-                                    @if($reserva->estado_reserva === 'Activa') text-green-600
-                                    @elseif($reserva->estado_reserva === 'Finalizada') text-blue-600
-                                    @elseif($reserva->estado_reserva === 'Cancelada') text-red-600
-                                    @else text-gray-600 @endif">
+                                            @if($reserva->estado_reserva === 'Activa') text-green-600
+                                            @elseif($reserva->estado_reserva === 'Finalizada') text-blue-600
+                                            @elseif($reserva->estado_reserva === 'Cancelada') text-red-600
+                                            @else text-gray-600 @endif">
                                         {{ $reserva->estado_reserva }}
                                     </span>
                                 </td>
-                                <td class="px-4 py-3 whitespace-nowrap">
+                                <td class="px-2 py-2">
                                     <span class="font-semibold px-2 py-1 rounded
-                                    @if($reserva->estado_pago === 'Pagado') text-green-600
-                                    @elseif($reserva->estado_pago === 'Cancelado') text-red-600
-                                    @elseif($reserva->estado_pago === 'Pendiente' && $reserva->aviso_pago)
-                                        text-yellow-600 animate-pulse bg-green-200
-                                    @elseif($reserva->estado_pago === 'Pendiente')
-                                        text-yellow-600
-                                    @else
-                                        text-gray-600
-                                    @endif">
+                                            @if($reserva->estado_pago === 'Pagado') text-green-600
+                                            @elseif($reserva->estado_pago === 'Cancelado') text-red-600
+                                            @elseif($reserva->estado_pago === 'Pendiente' && $reserva->aviso_pago)
+                                                text-yellow-600 animate-pulse bg-green-200
+                                            @elseif($reserva->estado_pago === 'Pendiente')
+                                                text-yellow-600
+                                            @else
+                                                text-gray-600
+                                            @endif">
                                         {{ $reserva->estado_pago }}
                                     </span>
                                 </td>
-                                <td class="px-4 py-3 truncate max-w-[200px]">
+                                <td class="px-2 py-2 truncate">
                                     {{ $reserva->habitacion->codigo_habitacion ?? 'N/A' }} -
                                     {{ $reserva->habitacion->categoria->nombre ?? '' }}
                                 </td>
-                                <td class="px-4 py-3 whitespace-nowrap">{{ \Carbon\Carbon::parse($reserva->fecha_ingreso)->format('d/m/Y') }}</td>
-                                <td class="px-4 py-3 whitespace-nowrap">{{ \Carbon\Carbon::parse($reserva->fecha_egreso)->format('d/m/Y') }}</td>
-                                <td class="px-4 py-3 font-medium whitespace-nowrap">
+                                <td class="px-2 py-2">{{ \Carbon\Carbon::parse($reserva->fecha_ingreso)->format('d/m/Y') }}</td>
+                                <td class="px-2 py-2">{{ \Carbon\Carbon::parse($reserva->fecha_egreso)->format('d/m/Y') }}</td>
+                                <td class="px-2 py-2 font-medium">
                                     ${{ number_format($reserva->precio_final, 2, ',', '.') }}
                                 </td>
-                                <td class="px-4 py-3 text-center whitespace-nowrap">
+                                <td class="px-2 py-2 text-center">
                                     <div class="flex flex-col items-center space-y-1">
                                         @if($reserva->estado_pago === 'Pendiente' && $reserva->aviso_pago)
                                         <form action="{{ route('reservas.pagoConfirmado', $reserva->id) }}" method="POST">
@@ -87,8 +87,6 @@
                                         </form>
                                         @endif
 
-
-                                        </form>
                                         @if($reserva->estado_reserva === 'Activa')
                                         <form method="POST" action="{{ route('backoffice.reservas.cancelarReserva', $reserva->id) }}" class="inline">
                                             @csrf
@@ -112,6 +110,7 @@
                         </tbody>
                     </table>
                 </div>
+
             </div>
         </div>
     </section>

@@ -1,0 +1,170 @@
+.calendario-container .calendario-scroll {
+    overflow-x: auto;
+    cursor: grab;
+    scroll-behavior: smooth;
+    user-select: none;
+}
+
+.calendario-container .calendario-scroll:active {
+    cursor: grabbing;
+}
+
+.calendario-container #tabla-calendario {
+    border-collapse: collapse;
+    width: 100%;
+    background-color: white;
+}
+
+.calendario-container #tabla-calendario th,
+.calendario-container #tabla-calendario td {
+    color: #111827 !important;
+    background-color: white !important;
+    border: 1px solid #d1d5db;
+    text-align: center;
+    vertical-align: middle;
+    padding: 6px;
+}
+
+.calendario-container th.sticky,
+.calendario-container td.sticky {
+    position: sticky;
+    left: 0;
+    background-color: white;
+    z-index: 10;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+}
+
+.calendario-container thead tr:first-child th {
+    background-color: #f3f4f6;
+    font-size: 1.25rem;
+    text-transform: uppercase;
+}
+
+.calendario-container thead tr:nth-child(3) td {
+    color: #9ca3af;
+    font-size: 0.75rem;
+}
+
+.calendario-container .overlay-reserva {
+    pointer-events: none;
+    z-index: 1;
+    position: absolute;
+    top: 75%;
+    left: 5%;
+    width: 90%;
+    height: 25%;
+    background-color: transparent;
+    border-radius: 6px;
+}
+
+.calendario-container #tabla-calendario th {
+    min-width: 8rem !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+}
+
+.calendario-container .pill-reserva {
+    position: absolute;
+    height: 24px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 0;
+    color: rgb(0, 0, 0);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    clip-path: polygon(
+        12px 0%,
+        calc(100% - 12px) 0%,
+        100% 100%,
+        calc(100% - 12px) 100%,
+        12px 100%,
+        0% 0%
+    );
+    background-color: #639cf7;
+    pointer-events: auto;
+    z-index: 50;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.calendario-container .pill-reserva.dragging {
+    opacity: 0.7;
+    z-index: 9999;
+}
+
+.calendario-container .dot-pago-pendiente {
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.calendario-container #menu-contextual-reserva {
+    position: absolute;
+    z-index: 9999;
+    display: none;
+    background-color: #f3f4f6;
+    border: 1px solid rgb(37, 37, 37);
+    border-radius: 8px;
+    font-family: sans-serif;
+    font-size: 12px;
+    min-width: 180px;
+    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+.calendario-container #menu-contextual-reserva ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.calendario-container #menu-contextual-reserva li {
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.calendario-container #menu-contextual-reserva li:last-child {
+    border-bottom: none;
+}
+
+.calendario-container #menu-contextual-reserva li a,
+.calendario-container #menu-contextual-reserva li button {
+    display: block;
+    width: 100%;
+    padding: 10px 14px;
+    text-align: left;
+    background: transparent;
+    border: none;
+    font-weight: bold;
+    color: #111827;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.calendario-container #menu-contextual-reserva li button:hover,
+.calendario-container #menu-contextual-reserva li a:hover {
+    background-color: #d1d5db;
+}
+
+.calendario-container #menu-contextual-reserva #btn-cancelar {
+    color: #dc2626;
+}
+
+.calendario-container #menu-contextual-reserva #btn-cancelar:hover {
+    background-color: #fee2e2;
+}
+
+/* 🎯 Input date solo dentro del calendario */
+.calendario-container input[type="date"] {
+    background-color: white !important;
+    color: #1f2937 !important;
+    padding: 6px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+}
