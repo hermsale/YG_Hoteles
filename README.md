@@ -1,4 +1,5 @@
 🏨 Gestor de Hotelería – Proyecto Final | Producción Web
+
 Este repositorio contiene el desarrollo del proyecto final grupal de la materia Producción Web, correspondiente a la carrera de Analista de Sistemas.
 
 El trabajo consistió en diseñar y construir desde cero un sistema de gestión hotelera, abordando todas las etapas del desarrollo: desde el modelado de la base de datos hasta la implementación de las vistas, funcionalidades e interfaz final. El enfoque fue fullstack, utilizando el framework Laravel como base principal.
