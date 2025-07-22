@@ -1,66 +1,41 @@
-DOCUMENTACIÓN: https://docs.google.com/document/d/1J_49uxaY14lm2qGMJnZyuGsklgRyaTpVCYsvsJdD3uI/edit?usp=sharing
-CREAR MODELO FACTORY CONTROLLER VIEW: php artisan make:model -NOMBRE-TABLA- -mcrf
-Volvi al origen
+🏨 Gestor de Hotelería – Proyecto Final | Producción Web
+Este repositorio contiene el desarrollo del proyecto final grupal de la materia Producción Web, correspondiente a la carrera de Analista de Sistemas.
 
+El trabajo consistió en diseñar y construir desde cero un sistema de gestión hotelera, abordando todas las etapas del desarrollo: desde el modelado de la base de datos hasta la implementación de las vistas, funcionalidades e interfaz final. El enfoque fue fullstack, utilizando el framework Laravel como base principal.
 
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+🎯 Objetivos del Proyecto
+Elegir una problemática real y proponer una solución informática desde cero.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Diseñar el modelo de datos, aplicar el paradigma MVC y construir una aplicación web funcional.
 
-## About Laravel
+Incorporar tecnologías modernas del ecosistema Laravel, aplicando buenas prácticas de desarrollo.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Aplicar control de acceso mediante roles y permisos, con vistas dinámicas según el perfil del usuario.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+🛠️ Tecnologías y herramientas utilizadas
+Laravel (framework PHP)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+PostgreSQL (base de datos relacional)
 
-## Learning Laravel
+Blade (motor de plantillas)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Tailwind CSS (framework de estilos)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Livewire (interactividad sin salir de Laravel)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Modales y componentes reutilizables
 
-## Laravel Sponsors
+Autenticación y gestión de sesiones
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Validaciones del lado del servidor
 
-### Premium Partners
+📌 Funcionalidades principales
+Gestión de reservas, habitaciones, clientes y usuarios
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Control de disponibilidad hotelera
 
-## Contributing
+Sistema de autenticación y paneles personalizados según el rol (Administrador, Recepcionista, etc.)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+CRUD completo de las principales entidades del sistema
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Vistas dinámicas e interactivas con Livewire y modales
